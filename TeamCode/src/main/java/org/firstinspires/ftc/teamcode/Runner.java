@@ -5,11 +5,11 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 public class Runner {
     private DcMotor leftF, leftB, rightF, rightB;
 
-    Runner (DcMotor _m1, DcMotor _m2, DcMotor _m3, DcMotor _m4)
+    Runner (DcMotor _leftF, DcMotor _leftB, DcMotor _rightF, DcMotor _rightB)
     {
-        leftF = _m1;
-        leftB = _m2;
-        rightF = _m3;
-        rightB = _m4;
+        leftF = _leftF;
+        leftB = _leftB;
+        rightF = _rightF;
+        rightB = _rightB;
     }
 }
