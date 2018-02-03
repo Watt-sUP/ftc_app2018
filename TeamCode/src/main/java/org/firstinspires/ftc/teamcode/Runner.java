@@ -14,6 +14,7 @@ public class Runner {
     {
         leftF = _frontLeft; leftB = _backLeft; rightF = _frontRight; rightB = _backRight;
         setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        verbose = false;
         initialCheck();
     }
 
@@ -38,16 +39,35 @@ public class Runner {
     {
         if( leftF.getController() != leftB.getController() )
         {
-            telemetry.setValue("Different controller for LEFT motors!");
+            if(verbose) telemetry.setValue("Different controller for LEFT motors!");
             error = 1;
         }
 
         if( rightF.getController() != rightB.getController() )
         {
-            telemetry.setValue("Different controller for RIGHT motors!");
+            if(verbose) telemetry.setValue("Different controller for RIGHT motors!");
             error = 2;
         }
+
+        if(error == 0 && verbose)  telemetry.setValue("OK!");
     }
 
+    public void setPower(double left, double right)
+    {
+        leftF.setPower(left); leftB.setPower(left);
+        rightF.setPower(right); rightB.setPower(right);
+    }
 
+    public void move(double lx, double ly)
+    {
+        /// TODO: set power to motors from gamepad axis
+    }
+
+    public void logInformation(String info)
+    {
+        if(!verbose)    return;
+        if(info == "Power") telemetry.setValue( leftF.getPower() + " " + leftB.getPower() + " " + rightF.getPower() + " " + rightB.getPower() );
+        if(info == "Power2") telemetry.setValue( leftF.getPower() + " " + rightF.getPower() );
+        if(info == "Position") telemetry.setValue( leftF.getCurrentPosition() + " " + leftB.getCurrentPosition() + " " + rightF.getCurrentPosition() + " " + rightB.getCurrentPosition() );
+    }
 }
