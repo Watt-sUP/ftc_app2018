@@ -16,6 +16,8 @@ public class CubeCollector
     private int[] liftP = {0, (int)(1e6)};
     private int whichServos = 0;
 
+    /// TODO: get values for openP, closeP and liftP
+
     CubeCollector(Servo _upL, Servo _upR, Servo _downL, Servo _downR, DcMotor _lift)
     {
         upL = _upL; upR = _upR; downL = _downL; downR = _downR; lift = _lift;
