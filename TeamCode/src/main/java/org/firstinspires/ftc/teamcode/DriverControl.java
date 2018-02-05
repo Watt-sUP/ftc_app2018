@@ -63,8 +63,8 @@ public class DriverControl extends LinearOpMode
             if(gamepad2.y)  collector.setControllingServo(1);
             if(gamepad2.x)  collector.setControllingServo(3);
 
-            if(gamepad2.dpad_left)  collector.openServo();
-            if(gamepad2.dpad_right) collector.closeServo();
+            if(gamepad2.left_bumper)  collector.openServo();
+            if(gamepad2.right_bumper) collector.closeServo();
 
             collector.moveLift(gamepad2.left_stick_x);
 

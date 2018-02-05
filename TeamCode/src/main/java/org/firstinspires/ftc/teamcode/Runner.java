@@ -60,17 +60,14 @@ public class Runner {
 
     public void move(double ly, double rx)
     {
-            if(rx==0)
-                setPower(ly,ly);
-            else
-                if(ly==0)
-                    setPower(rx,-rx);
-                else
-                    if(rx<0)
-                        setPower(ly+ly*rx,ly);
-                    else
-                        if(rx>0)
-                            setPower(ly,ly-ly*rx);
+            if(rx == 0)
+                setPower(ly, ly);
+            else if(ly == 0)
+                setPower(rx, -rx);
+            else if(rx < 0)
+                setPower(ly + ly * rx, ly);
+            else if(rx > 0)
+                setPower(ly, ly - ly * rx);
 
     }
 
