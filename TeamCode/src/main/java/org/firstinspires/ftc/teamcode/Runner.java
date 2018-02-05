@@ -60,6 +60,7 @@ public class Runner {
 
     public void move(double ly, double rx)
     {
+        /// TODO: fix move code.
             if(rx == 0)
                 setPower(ly, ly);
             else if(ly == 0)

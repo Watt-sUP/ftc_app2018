@@ -11,8 +11,8 @@ public class CubeCollector
     private DcMotor lift;
     private Telemetry.Item telemetry;
     private boolean verbose = false;
-    private int[] openP = {150, 70, 50, 190}; /// upL, upR, downL, downR
-    private int[] closeP = {0, 255, 255, 0};
+    private double[] openP = {150, 70, 50, 190}; /// upL, upR, downL, downR
+    private double[] closeP = {0, 255, 255, 0};
     private int[] liftP = {0, (int)(1e6)};
     private int stateUp = 0, stateDown = 0; /// 0 - open, 1 - closed
 
@@ -23,6 +23,12 @@ public class CubeCollector
         upL = _upL; upR = _upR; downL = _downL; downR = _downR; lift = _lift;
         verbose = false;
         lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        for(int i = 0; i < 4; i++)
+        {
+            openP[i] = (openP[i] / (double)(255));
+            closeP[i] = (closeP[i] / (double)(255));
+        }
 
         upL.setPosition(openP[0]);
         upR.setPosition(openP[1]);
@@ -37,6 +43,12 @@ public class CubeCollector
         verbose = true;
         lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         telemetry.setValue("OK!");
+
+        for(int i = 0; i < 4; i++)
+        {
+            openP[i] = (openP[i] / (double)(255));
+            closeP[i] = (closeP[i] / (double)(255));
+        }
 
         upL.setPosition(openP[0]);
         upR.setPosition(openP[1]);
@@ -84,5 +96,10 @@ public class CubeCollector
             }
             stateDown ^= 1;
         }
+    }
+
+    public void logInformation()
+    {
+        telemetry.setValue(upL.getPosition() + " " + upR.getPosition() + " " + downL.getPosition() + " " + downR.getPosition());
     }
 }
