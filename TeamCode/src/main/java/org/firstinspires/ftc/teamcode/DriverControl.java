@@ -53,18 +53,59 @@ public class DriverControl extends LinearOpMode
         runner.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         collector.setLiftMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+        int[] last = {0, 0, 0, 0};
+
         while (opModeIsActive())
         {
             /// Gamepad1
             runner.move(-gamepad1.left_stick_y, gamepad1.right_stick_x);
 
             /// Gamepad2
-            if(gamepad2.a)  collector.setControllingServo(2);
-            if(gamepad2.y)  collector.setControllingServo(1);
-            if(gamepad2.x)  collector.setControllingServo(3);
 
-            if(gamepad2.left_bumper)  collector.openServo();
-            if(gamepad2.right_bumper) collector.closeServo();
+            /// TODO: clean button press code
+            if(gamepad2.a)
+            {
+                if(last[0] == 0)
+                {
+                    collector.changeState(2);
+                    last[0] = 1;
+                }
+            }
+            else
+                last[0] = 0;
+
+            if(gamepad2.y)
+            {
+                if(last[1] == 0)
+                {
+                    collector.changeState(1);
+                    last[1] = 1;
+                }
+            }
+            else
+                last[1] = 0;
+
+            if(gamepad2.x)
+            {
+                if(last[2] == 0)
+                {
+                    collector.changeState(3);
+                    last[2] = 1;
+                }
+            }
+            else
+                last[2] = 0;
+
+            if(gamepad2.b)
+            {
+                if(last[3] == 0)
+                {
+                    collector.changeState(3);
+                    last[3] = 1;
+                }
+            }
+            else
+                last[3] = 0;
 
             collector.moveLift(gamepad2.left_stick_x);
 
