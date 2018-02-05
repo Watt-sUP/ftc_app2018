@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-@TeleOp(name="Basic: Linear OpMode", group="Linear Opmode")
+@TeleOp(name="DriverControl", group="Linear Opmode")
 //@Disabled
 public class DriverControl extends LinearOpMode
 {
@@ -62,50 +62,33 @@ public class DriverControl extends LinearOpMode
 
             /// Gamepad2
 
-            /// TODO: clean button press code
-            if(gamepad2.a)
+            if(gamepad2.a && last[0] == 0)
             {
-                if(last[0] == 0)
-                {
-                    collector.changeState(2);
-                    last[0] = 1;
-                }
+                collector.changeState(2);
+                last[0] = 1;
             }
-            else
-                last[0] = 0;
+            else if(!gamepad2.a) last[0] = 0;
 
-            if(gamepad2.y)
+            if(gamepad2.y && last[1] == 0)
             {
-                if(last[1] == 0)
-                {
-                    collector.changeState(1);
-                    last[1] = 1;
-                }
+                collector.changeState(1);
+                last[1] = 1;
             }
-            else
-                last[1] = 0;
+            else if(!gamepad2.y) last[1] = 0;
 
-            if(gamepad2.x)
+            if(gamepad2.x && last[2] == 0)
             {
-                if(last[2] == 0)
-                {
-                    collector.changeState(3);
-                    last[2] = 1;
-                }
+                collector.changeState(3);
+                last[2] = 1;
             }
-            else
-                last[2] = 0;
+            else if(!gamepad2.x) last[2] = 0;
 
-            if(gamepad2.b)
+            if(gamepad2.b && last[3] == 0)
             {
-                if(last[3] == 0)
-                {
-                    collector.changeState(3);
-                    last[3] = 1;
-                }
+                collector.changeState(3);
+                last[3] = 1;
             }
-            else
-                last[3] = 0;
+            else if(!gamepad2.b) last[3] = 0;
 
             collector.moveLift(gamepad2.left_stick_x);
 
