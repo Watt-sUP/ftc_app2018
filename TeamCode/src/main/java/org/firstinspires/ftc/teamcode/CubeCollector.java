@@ -11,8 +11,8 @@ public class CubeCollector
     private DcMotor lift;
     private Telemetry.Item telemetry;
     private boolean verbose = false;
-    private int[] openP = {0, 0, 0, 0}; /// upL, upR, downL, downR
-    private int[] closeP = {0, 0, 0, 0};
+    private int[] openP = {150, 70, 50, 190}; /// upL, upR, downL, downR
+    private int[] closeP = {0, 255, 255, 0};
     private int[] liftP = {0, (int)(1e6)};
     private int stateUp = 0, stateDown = 0; /// 0 - open, 1 - closed
 
