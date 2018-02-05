@@ -56,7 +56,7 @@ public class DriverControl extends LinearOpMode
         while (opModeIsActive())
         {
             /// Gamepad1
-            runner.move(gamepad1.left_stick_x, gamepad1.right_stick_y);
+            runner.move(-gamepad1.left_stick_y, gamepad1.right_stick_x);
 
             /// Gamepad2
             if(gamepad2.a)  collector.setControllingServo(2);
