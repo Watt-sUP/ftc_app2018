@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ServoController;
+import com.qualcomm.robotcore.hardware.ServoControllerEx;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -11,8 +13,8 @@ public class CubeCollector
     private DcMotor lift;
     private Telemetry.Item telemetry;
     private boolean verbose = false;
-    private double[] openP = {150, 70, 50, 190}; /// upL, upR, downL, downR
-    private double[] closeP = {0, 255, 255, 0};
+    private double[] openP = {0.5, 0.5, 0.5, 0.5}; /// upL, upR, downL, downR
+    private double[] closeP = {0.5, 0.5, 0.5, 0.5};
     private int[] liftP = {0, (int)(1e6)};
     private int stateUp = 0, stateDown = 0; /// 0 - open, 1 - closed
 
@@ -23,12 +25,6 @@ public class CubeCollector
         upL = _upL; upR = _upR; downL = _downL; downR = _downR; lift = _lift;
         verbose = false;
         lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        for(int i = 0; i < 4; i++)
-        {
-            openP[i] = (openP[i] / (double)(255));
-            closeP[i] = (closeP[i] / (double)(255));
-        }
 
         upL.setPosition(openP[0]);
         upR.setPosition(openP[1]);
@@ -43,12 +39,6 @@ public class CubeCollector
         verbose = true;
         lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         telemetry.setValue("OK!");
-
-        for(int i = 0; i < 4; i++)
-        {
-            openP[i] = (openP[i] / (double)(255));
-            closeP[i] = (closeP[i] / (double)(255));
-        }
 
         upL.setPosition(openP[0]);
         upR.setPosition(openP[1]);
@@ -96,6 +86,40 @@ public class CubeCollector
             }
             stateDown ^= 1;
         }
+    }
+
+    public void addValue(Servo servo, double val)
+    {
+        double p = servo.getPosition();
+        p += val;
+        p = Math.max(0.0, p);
+        p = Math.min(1.0, p);
+        servo.setPosition(p);
+    }
+
+    public void addValue(int servo, double val)
+    {
+        if(servo == 0)  addValue(upL, val);
+        if(servo == 1)  addValue(upR, val);
+        if(servo == 2)  addValue(downL, val);
+        if(servo == 3)  addValue(downR, val);
+    }
+
+    public void setPower(Servo servo, int val)
+    {
+        /// TODO: this is not fkin working
+        ServoControllerEx controller = (ServoControllerEx) servo.getController();
+        int port = servo.getPortNumber();
+        if(val == 0)    controller.setServoPwmDisable(port);
+        if(val == 1)    controller.setServoPwmEnable(port);
+    }
+
+    public void setPower(int servo, int val)
+    {
+        if(servo == 0)  setPower(upL, val);
+        if(servo == 1)  setPower(upR, val);
+        if(servo == 2)  setPower(downL, val);
+        if(servo == 3)  setPower(downR, val);
     }
 
     public void logInformation()
