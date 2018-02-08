@@ -48,8 +48,9 @@ public class CubeCollector
 
     public void moveLift(double power)
     {
-        if(lift.getCurrentPosition() < liftP[0])   { lift.setPower(0); return; }
-        if(lift.getCurrentPosition() > liftP[1])   { lift.setPower(0); return; }
+        /// TODO: Get values and set limits
+        //if(lift.getCurrentPosition() < liftP[0])   { lift.setPower(0); return; }
+        //if(lift.getCurrentPosition() > liftP[1])   { lift.setPower(0); return; }
 
         lift.setPower(power);
     }
@@ -105,21 +106,10 @@ public class CubeCollector
         if(servo == 3)  addValue(downR, val);
     }
 
-    public void setPower(Servo servo, int val)
+    public void setPower(int val)
     {
-        /// TODO: this is not fkin working
-        ServoControllerEx controller = (ServoControllerEx) servo.getController();
-        int port = servo.getPortNumber();
-        if(val == 0)    controller.setServoPwmDisable(port);
-        if(val == 1)    controller.setServoPwmEnable(port);
-    }
-
-    public void setPower(int servo, int val)
-    {
-        if(servo == 0)  setPower(upL, val);
-        if(servo == 1)  setPower(upR, val);
-        if(servo == 2)  setPower(downL, val);
-        if(servo == 3)  setPower(downR, val);
+        if(val == 0)    upL.getController().pwmDisable();
+        if(val == 1)    upL.getController().pwmEnable();
     }
 
     public void logInformation()
