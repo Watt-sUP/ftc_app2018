@@ -66,7 +66,7 @@ public class ServoTest extends LinearOpMode {
         while (opModeIsActive()) {
 
             //if(ctrl.isServoPwmEnabled(1))   ctrl.setServoPwmDisable(1);
-            servo.getController().pwmDisable();
+            //servo.getController().pwmDisable();
             telemetry.update();
         }
     }
