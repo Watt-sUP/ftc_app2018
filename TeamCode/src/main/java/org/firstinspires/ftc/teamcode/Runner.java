@@ -54,21 +54,31 @@ public class Runner {
 
     public void setPower(double left, double right)
     {
+        setPower(left, right, 1.0);
+    }
+
+    public void setPower(double left, double right, double ratio)
+    {
+        left *= ratio; right *= ratio;
         leftF.setPower(left); leftB.setPower(left);
         rightF.setPower(right); rightB.setPower(right);
     }
 
-    public void move(double ly, double rx)
+    public void move(double y, double x)
     {
-        if(rx == 0)
-            setPower(-ly, ly);
-        else if(ly == 0)
-            setPower(-rx, -rx);
-        else if(rx < 0)
-            setPower(-ly - ly * rx, ly);
-        else if(rx > 0)
-            setPower(-ly, ly - ly * rx);
+        move(y, x, 1.0);
+    }
 
+    public void move(double y, double x, double r)
+    {
+        if(x == 0)
+            setPower(-y, y, r);
+        else if(y == 0)
+            setPower(-x, -x, r);
+        else if(x < 0)
+            setPower(-y - y * x, y, r);
+        else if(x > 0)
+            setPower(-y, y - y * x, r);
     }
 
     public void logInformation(String info)
