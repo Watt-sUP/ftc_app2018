@@ -7,8 +7,8 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class Runner {
     private DcMotor leftF, leftB, rightF, rightB;
     private Telemetry.Item telemetry;
-    private boolean verbose = false;
-    private int error = 0;
+    private boolean verbose = false;    /// True if telemetry is initialized
+    private int error = 0;  /// Error code.
 
     Runner (DcMotor _frontLeft, DcMotor _backLeft, DcMotor _frontRight, DcMotor _backRight)
     {
@@ -27,7 +27,7 @@ public class Runner {
         initialCheck();
     }
 
-    public void setMode(DcMotor.RunMode mode)
+    public void setMode(DcMotor.RunMode mode)   /// Sets mode for all motors
     {
         leftF.setMode(mode);
         leftB.setMode(mode);
@@ -35,7 +35,7 @@ public class Runner {
         rightF.setMode(mode);
     }
 
-    public void initialCheck()
+    public void initialCheck()  /// Checks for errors before init
     {
         if( leftF.getController() != leftB.getController() )
         {
@@ -52,24 +52,19 @@ public class Runner {
         if(error == 0 && verbose)  telemetry.setValue("OK!");
     }
 
-    public void setPower(double left, double right)
-    {
-        setPower(left, right, 1.0);
-    }
-
-    public void setPower(double left, double right, double ratio)
+    public void setPower(double left, double right, double ratio)   /// Sets power to motors
     {
         left *= ratio; right *= ratio;
         leftF.setPower(left); leftB.setPower(left);
         rightF.setPower(right); rightB.setPower(right);
     }
 
-    public void move(double y, double x)
+    public void setPower(double left, double right)
     {
-        move(y, x, 1.0);
+        setPower(left, right, 1.0);
     }
 
-    public void move(double y, double x, double r)
+    public void move(double y, double x, double r)  /// Moves robot considering gamepad axis Y(forward-backward), X(rotation), R(power ratio)
     {
         if(x == 0)
             setPower(-y, y, r);
@@ -81,7 +76,12 @@ public class Runner {
             setPower(-y, y - y * x, r);
     }
 
-    public void logInformation(String info)
+    public void move(double y, double x)
+    {
+        move(y, x, 1.0);
+    }
+
+    public void logInformation(String info) /// Logs information to telemetry
     {
         if(!verbose)    return;
         if(info == "Power") telemetry.setValue( leftF.getPower() + " " + leftB.getPower() + " " + rightF.getPower() + " " + rightB.getPower() );

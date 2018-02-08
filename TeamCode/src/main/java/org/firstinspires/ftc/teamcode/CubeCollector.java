@@ -12,10 +12,13 @@ public class CubeCollector
     private Servo upL, upR, downL, downR;
     private DcMotor lift;
     private Telemetry.Item telemetry;
-    private boolean verbose = false;
+    private boolean verbose = false;    /// true if telemetry is initialized
+
+    /// Constant values based on positions of servos(open, closed)
     private double[] openP = {0.5, 0.5, 0.5, 0.5}; /// upL, upR, downL, downR
     private double[] closeP = {0.5, 0.5, 0.5, 0.5};
-    private int[] liftP = {0, (int)(1e6)};
+
+    private int[] liftP = {0, (int)(1e6)};  /// Lower and upper position for lift motor. (for Duta)
     private int stateUp = 0, stateDown = 0; /// 0 - open, 1 - closed
 
     /// TODO: get values for openP, closeP and liftP
@@ -46,7 +49,7 @@ public class CubeCollector
         downR.setPosition(openP[3]);
     }
 
-    public void moveLift(double power)
+    public void moveLift(double power)  /// Moves the lift motor
     {
         /// TODO: Get values and set limits
         //if(lift.getCurrentPosition() < liftP[0])   { lift.setPower(0); return; }
@@ -55,9 +58,9 @@ public class CubeCollector
         lift.setPower(power);
     }
 
-    public void setLiftMode(DcMotor.RunMode rm) { lift.setMode(rm); }
+    public void setLiftMode(DcMotor.RunMode rm) { lift.setMode(rm); }   /// Sets lift motor mode
 
-    public void changeState(int ids)
+    public void changeState(int ids)    /// Change state for servos: 1 = up, 2 = down, 3 = up + down
     {
         if( (ids & 1) > 0 )
         {
@@ -89,7 +92,7 @@ public class CubeCollector
         }
     }
 
-    public void addValue(Servo servo, double val)
+    public void addValue(Servo servo, double val)   /// Adds value to servo position
     {
         double p = servo.getPosition();
         p += val;
@@ -98,7 +101,7 @@ public class CubeCollector
         servo.setPosition(p);
     }
 
-    public void addValue(int servo, double val)
+    public void addValue(int servo, double val) /// Adds value to servo position
     {
         if(servo == 0)  addValue(upL, val);
         if(servo == 1)  addValue(upR, val);
@@ -106,13 +109,13 @@ public class CubeCollector
         if(servo == 3)  addValue(downR, val);
     }
 
-    public void setPower(int val)
+    public void setPower(int val)   /// Turns servo power on and off
     {
         if(val == 0)    upL.getController().pwmDisable();
         if(val == 1)    upL.getController().pwmEnable();
     }
 
-    public void logInformation()
+    public void logInformation()    /// Logs information to telemetry
     {
         telemetry.setValue( String.format("%.3f", upL.getPosition()) + " " + String.format("%.3f", upR.getPosition()) + " " +
                 String.format("%.3f",downL.getPosition()) + " " + String.format("%.3f", downR.getPosition()) + " " +
