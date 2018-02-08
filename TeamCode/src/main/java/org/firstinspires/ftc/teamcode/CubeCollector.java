@@ -115,6 +115,7 @@ public class CubeCollector
     public void logInformation()
     {
         telemetry.setValue( String.format("%.3f", upL.getPosition()) + " " + String.format("%.3f", upR.getPosition()) + " " +
-                String.format("%.3f",downL.getPosition()) + " " + String.format("%.3f", downR.getPosition()) );
+                String.format("%.3f",downL.getPosition()) + " " + String.format("%.3f", downR.getPosition()) + " " +
+                lift.getCurrentPosition() );
     }
 }
