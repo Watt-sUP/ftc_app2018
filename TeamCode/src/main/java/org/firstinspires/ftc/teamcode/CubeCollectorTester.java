@@ -95,6 +95,7 @@ public class CubeCollectorTester extends LinearOpMode {
 
             collector.moveLift(-gamepad1.left_stick_y);
 
+            collector.logInformation("Positions");
             telemetry.update();
         }
     }

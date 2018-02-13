@@ -13,7 +13,8 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 //@Disabled
 public class DriverControl extends LinearOpMode
 {
-    // Declare OpMode members.
+
+    //Declare OpMode components
     private ElapsedTime runtime = new ElapsedTime();
     private Runner runner;
     private CubeCollector collector;
@@ -21,6 +22,7 @@ public class DriverControl extends LinearOpMode
     @Override
     public void runOpMode()
     {
+        /// Initialize objects
         telemetry.setAutoClear(false);
 
         Telemetry.Item timeTelemetry = telemetry.addData("Time", 0);
@@ -49,7 +51,7 @@ public class DriverControl extends LinearOpMode
         waitForStart();
         runtime.reset();
 
-        /// Init after start
+        /// Initializations after start
         runner.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         collector.setLiftMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
@@ -57,14 +59,14 @@ public class DriverControl extends LinearOpMode
 
         while (opModeIsActive())
         {
-            /// Gamepad1
+            /// gamepad1
             double rnrY = -gamepad1.left_stick_y;
             double rnrX = gamepad1.right_stick_x;
             if(gamepad1.left_bumper) runner.move(rnrY, rnrX, 0.25);
             else if(gamepad1.right_bumper) runner.move(rnrY, rnrX, 0.5);
             else runner.move(rnrY, rnrX);
 
-            /// Gamepad2
+            /// gamepad2
             if(gamepad2.a && last[0] == 0)
             {
                 collector.changeState(2);
@@ -98,7 +100,7 @@ public class DriverControl extends LinearOpMode
             /// Telemetry
             timeTelemetry.setValue(runtime.toString());
             runner.logInformation("Power2");
-            collector.logInformation();
+            collector.logInformation("Positions");
             telemetry.update();
         }
     }

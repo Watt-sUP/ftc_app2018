@@ -4,38 +4,58 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
+/**
+ * Runner class is used for controlling the moving system of the robot
+ */
 public class Runner {
+    /**
+     * leftF = front left motor
+     * leftB = back left motor
+     * rightF = front right motor
+     * rightB = back right motor
+     */
     private DcMotor leftF, leftB, rightF, rightB;
+
+    /**
+     * telemetry = telemetry item assigned to the moving system
+     * verbose = true if any telemetry item is assigned to this class
+     */
     private Telemetry.Item telemetry;
-    private boolean verbose = false;    /// True if telemetry is initialized
-    private int error = 0;  /// Error code.
+    private boolean verbose = false;
 
-    Runner (DcMotor _frontLeft, DcMotor _backLeft, DcMotor _frontRight, DcMotor _backRight)
+    /**
+     * Error code. More than 0 if an error is detected in the initial check.
+     */
+    private int error = 0;
+
+    /**
+     * Constructor
+     * @param _frontLeft front left motor
+     * @param _backLeft back left motor
+     * @param _frontRight front right motor
+     * @param _backRight back right motor
+     * @param _telemetry OPTIONAL -> telemetry item
+     */
+    Runner (DcMotor _frontLeft, DcMotor _backLeft, DcMotor _frontRight, DcMotor _backRight, Object... _telemetry)
     {
         leftF = _frontLeft; leftB = _backLeft; rightF = _frontRight; rightB = _backRight;
         setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        verbose = false;
+
+        if(_telemetry.length > 0 && (_telemetry[0] instanceof Telemetry.Item))
+        {
+            verbose = true;
+            telemetry = (Telemetry.Item) _telemetry[0];
+        }
+        else
+            verbose = false;
+
         initialCheck();
     }
 
-    Runner (DcMotor _frontLeft, DcMotor _backLeft, DcMotor _frontRight, DcMotor _backRight, Telemetry.Item _telemetry)
-    {
-        leftF = _frontLeft; leftB = _backLeft; rightF = _frontRight; rightB = _backRight;
-        setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        telemetry = _telemetry;
-        verbose = true;
-        initialCheck();
-    }
-
-    public void setMode(DcMotor.RunMode mode)   /// Sets mode for all motors
-    {
-        leftF.setMode(mode);
-        leftB.setMode(mode);
-        rightB.setMode(mode);
-        rightF.setMode(mode);
-    }
-
-    public void initialCheck()  /// Checks for errors before init
+    /**
+     * Checks for errors before initialization
+     */
+    private void initialCheck()
     {
         if( leftF.getController() != leftB.getController() )
         {
@@ -52,19 +72,49 @@ public class Runner {
         if(error == 0 && verbose)  telemetry.setValue("OK!");
     }
 
-    public void setPower(double left, double right, double ratio)   /// Sets power to motors
+    /**
+     * Set the run mode for all motors
+     * @param mode the new RunMode
+     */
+    public void setMode(DcMotor.RunMode mode)
+    {
+        leftF.setMode(mode);
+        leftB.setMode(mode);
+        rightB.setMode(mode);
+        rightF.setMode(mode);
+    }
+
+
+    /**
+     * Set power for all motors, for left and right sides
+     * @param left left side power
+     * @param right right side power
+     * @param ratio scale ratio
+     */
+    public void setPower(double left, double right, double ratio)
     {
         left *= ratio; right *= ratio;
         leftF.setPower(left); leftB.setPower(left);
         rightF.setPower(right); rightB.setPower(right);
     }
 
+    /**
+     * Set power for all motors, for left and right sides, without any scale ratio
+     * @param left left side power
+     * @param right right side power
+     */
     public void setPower(double left, double right)
     {
         setPower(left, right, 1.0);
     }
 
-    public void move(double y, double x, double r)  /// Moves robot considering gamepad axis Y(forward-backward), X(rotation), R(power ratio)
+    /**
+     * Moves robot according to gamepad axis Y(forward-backward), X(rotation) and scale ratio R(power ratio)
+     * @param y forward-backward axis
+     * @param x rotation axis
+     * @param r scale ratio
+     */
+    public void move(double y, double x, double r)
     {
         if(x == 0)
             setPower(-y, y, r);
@@ -76,12 +126,21 @@ public class Runner {
             setPower(-y, y - y * x, r);
     }
 
+    /**
+     * Moves robot according to gamepad axis Y(forward-backward), X(rotation) and no scale ratio
+     * @param y forward-backward axis
+     * @param x rotation axis
+     */
     public void move(double y, double x)
     {
         move(y, x, 1.0);
     }
 
-    public void logInformation(String info) /// Logs information to telemetry
+    /**
+     * Logs information to telemetry if verbose is true
+     * @param info information type
+     */
+    public void logInformation(String info)
     {
         if(!verbose)    return;
         if(info == "Power") telemetry.setValue( leftF.getPower() + " " + leftB.getPower() + " " + rightF.getPower() + " " + rightB.getPower() );
