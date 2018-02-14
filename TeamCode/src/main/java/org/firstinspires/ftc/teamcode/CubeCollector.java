@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.ServoControllerEx;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 /**
- * CubeCollector class is used for controlling the cube collecting system of the robot
+ * CubeCollector class is used for controlling the cube collecting system of the robot #Mugurel
  */
 public class CubeCollector
 {

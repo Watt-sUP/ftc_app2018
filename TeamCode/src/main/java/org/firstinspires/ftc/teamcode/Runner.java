@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 /**
- * Runner class is used for controlling the moving system of the robot
+ * Runner class is used for controlling the moving system of the robot #Mugurel
  */
 public class Runner {
     /**
