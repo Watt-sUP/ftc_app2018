@@ -12,8 +12,8 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class RelicGrabber
 {
     /**
-     * monster = big servo
-     * claw = small servo attached to the big servo
+     * 0. monster = big servo
+     * 1. claw = small servo attached to the big servo
      */
     private Servo monster, claw;
     /**
@@ -65,6 +65,8 @@ public class RelicGrabber
             verbose = false;
 
         pusher.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        monster.setPosition(monsterP[0]);
+        claw.setPosition(clawP[1]);
     }
 
     /**
@@ -83,4 +85,70 @@ public class RelicGrabber
      * @param rm new RunMode to set
      */
     public void setPusherMode(DcMotor.RunMode rm) { pusher.setMode(rm); }
+
+    /**
+     * Change state of current servo
+     * @param servo 0 = monster
+     *              1 = claw
+     */
+    public void changeState(int servo)
+    {
+        if(servo == 0)
+        {
+            stateMonster ^= 1;
+            monster.setPosition(monsterP[stateMonster]);
+        }
+        else if(servo == 1)
+        {
+            stateClaw ^= 1;
+            claw.setPosition(clawP[stateClaw]);
+        }
+    }
+
+    /**
+     * PRIVATE
+     * Changes position of a servo adding val to the current position
+     * @param servo the changing servo
+     * @param val added value
+     */
+    private void addValue(Servo servo, double val)
+    {
+        double p = servo.getPosition();
+        p += val;
+        p = Math.max(0.0, p);
+        p = Math.min(1.0, p);
+        servo.setPosition(p);
+    }
+
+    /**
+     * Changes position of a servo adding val to the current position
+     * @param servo id of the changing servo
+     * @param val added value
+     */
+    public void addValue(int servo, double val)
+    {
+        if(servo == 0)  addValue(monster, val);
+        if(servo == 1)  addValue(claw, val);
+    }
+
+    /**
+     * Enables/Disables power in all servos in this servo controller.
+     * @param val 0 = disabled, 1 = enabled
+     */
+    public void setPower(int val)
+    {
+        if(val == 0)    monster.getController().pwmDisable();
+        if(val == 1)    monster.getController().pwmEnable();
+    }
+
+    /**
+     * Logs information to telemetry if verbose is true
+     * @param info information type
+     */
+    public void logInformation(String info)
+    {
+        if(!verbose)    return;
+        if(info == "Positions") telemetry.setValue( String.format("$.3f", monster.getPosition()) + " " + String.format("%.3f", claw.getPosition() ) +
+                " " + pusher.getCurrentPosition());
+    }
 }
