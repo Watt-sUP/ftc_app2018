@@ -29,6 +29,11 @@ public class Runner {
     private int error = 0;
 
     /**
+     * Gamepad values
+     */
+    private double rnrX, rnrY, rnrR;
+
+    /**
      * Constructor
      * @param _frontLeft front left motor
      * @param _backLeft back left motor
@@ -116,6 +121,8 @@ public class Runner {
      */
     public void move(double y, double x, double r)
     {
+        rnrX = x; rnrY = y; rnrR = r;
+
         if(x == 0)
             setPower(-y, y, r);
         else if(y == 0)
@@ -146,5 +153,7 @@ public class Runner {
         if(info == "Power") telemetry.setValue( leftF.getPower() + " " + leftB.getPower() + " " + rightF.getPower() + " " + rightB.getPower() );
         if(info == "Power2") telemetry.setValue( leftF.getPower() + " " + rightF.getPower() );
         if(info == "Position") telemetry.setValue( leftF.getCurrentPosition() + " " + leftB.getCurrentPosition() + " " + rightF.getCurrentPosition() + " " + rightB.getCurrentPosition() );
+        if(info == "Gamepad")   telemetry.setValue( String.format("%.3f", rnrX) + " " + String.format("%.3f", rnrY) + " " + String.format("%.3f", rnrR) );
+
     }
 }

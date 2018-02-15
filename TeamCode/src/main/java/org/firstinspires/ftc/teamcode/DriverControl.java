@@ -95,11 +95,11 @@ public class DriverControl extends LinearOpMode
             }
             else if(!gamepad2.b) last[3] = 0;
 
-            collector.moveLift(gamepad2.left_stick_x);
+            collector.moveLift(-gamepad2.left_stick_y * 0.75);
 
             /// Telemetry
             timeTelemetry.setValue(runtime.toString());
-            runner.logInformation("Power2");
+            runner.logInformation("Gamepad");
             collector.logInformation("Positions");
             telemetry.update();
         }
