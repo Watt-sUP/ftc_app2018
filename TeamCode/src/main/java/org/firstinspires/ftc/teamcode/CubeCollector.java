@@ -145,6 +145,27 @@ public class CubeCollector
     }
 
     /**
+     * Set servos to middle position
+     * @param ids ID-s of the servos
+     *            1 = upper servos
+     *            2 = lower servos
+     *            3 = upper + lower servos
+     */
+    public void goMiddle(int ids)
+    {
+        if( (ids & 1) > 0 )
+        {
+            upL.setPosition(midP[0]);
+            upR.setPosition(midP[1]);
+        }
+        if( (ids & 2) > 0 )
+        {
+            downL.setPosition(midP[2]);
+            downR.setPosition(midP[3]);
+        }
+    }
+
+    /**
      * PRIVATE
      * Changes position of a servo adding val to the current position
      * @param servo the changing servo
