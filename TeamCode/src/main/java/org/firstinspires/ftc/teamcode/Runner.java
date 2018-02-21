@@ -34,6 +34,13 @@ public class Runner {
     private double rnrX, rnrY, rnrR;
 
     /**
+     *
+     */
+    private double ticksPerRevolution = 1220;
+    private double wheelDiameter = 4.0 * 2.54;
+    private double wheelLength = wheelDiameter * Math.PI;
+
+    /**
      * Constructor
      * @param _frontLeft front left motor
      * @param _backLeft back left motor
@@ -55,6 +62,8 @@ public class Runner {
             verbose = false;
 
         initialCheck();
+
+        ticksPerRevolution = leftF.getMotorType().getTicksPerRev();
     }
 
     /**
@@ -144,6 +153,35 @@ public class Runner {
     }
 
     /**
+     * Moves robot cm centimeters forward (> 0) or backward (< 0)
+     * @param cm number of centimeters
+     */
+    public void distanceMove(double cm, double power)
+    {
+        double addTicks = cm / wheelLength * ticksPerRevolution;
+        int add = (int)Math.round(addTicks);
+
+        DcMotor.RunMode oldMode = leftF.getMode();
+
+        setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftF.setTargetPosition( leftF.getCurrentPosition() + add );
+        leftB.setTargetPosition( leftB.getCurrentPosition() + add );
+        rightF.setTargetPosition( rightF.getCurrentPosition() + add );
+        rightB.setTargetPosition( rightB.getCurrentPosition() + add );
+
+        power = Math.abs(power);
+        setPower(power, power);
+
+        while(  Math.abs(leftF.getCurrentPosition() - leftF.getTargetPosition()) > 10 ||
+                Math.abs(leftB.getCurrentPosition() - leftB.getTargetPosition()) > 10 ||
+                Math.abs(rightF.getCurrentPosition() - rightF.getTargetPosition()) > 10 ||
+                Math.abs(rightB.getCurrentPosition() - rightB.getTargetPosition()) > 10 ) ;
+
+        setPower(0.0, 0.0);
+        setMode(oldMode);
+    }
+
+    /**
      * Logs information to telemetry if verbose is true
      * @param info information type
      */
@@ -154,6 +192,5 @@ public class Runner {
         if(info == "Power2") telemetry.setValue( leftF.getPower() + " " + rightF.getPower() );
         if(info == "Position") telemetry.setValue( leftF.getCurrentPosition() + " " + leftB.getCurrentPosition() + " " + rightF.getCurrentPosition() + " " + rightB.getCurrentPosition() );
         if(info == "Gamepad")   telemetry.setValue( String.format("%.3f", rnrX) + " " + String.format("%.3f", rnrY) + " " + String.format("%.3f", rnrR) );
-
     }
 }
