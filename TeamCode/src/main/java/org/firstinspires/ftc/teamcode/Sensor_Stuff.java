@@ -4,6 +4,8 @@ import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+
 /**
  * Created by Tavi on 2/21/2018.
  */
@@ -11,25 +13,52 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 public class Sensor_Stuff {
 
     Runner rnr;
-
+    boolean dist_s_Target=false, dist_offset=false ;
     ModernRoboticsI2cGyro gyro;
-    ModernRoboticsI2cRangeSensor u_s;
-    ColorSensor cs;
+    ModernRoboticsI2cRangeSensor dist_s;
+    ColorSensor c_s;
 
 
     Sensor_Stuff  (ModernRoboticsI2cRangeSensor Ultrasonic_Distance, ModernRoboticsI2cGyro Gyro, ColorSensor cs, Runner x ){
         gyro = Gyro;
-        u_s = Ultrasonic_Distance;
-        cs = cs;
+        dist_s= Ultrasonic_Distance;
+        c_s = cs;
         rnr = x;
+
     }
     private void  Keep_Orientation  (int Optimal_pos ){
         while( gyro.getHeading() != Optimal_pos )
             //ToDo: test if  rotation constant is big enough for rotation to be made when Optimal_pos-gyro.getHeading is small, try a bigger constant
          if( Optimal_pos-gyro.getHeading() > 0 )
-            rnr.setPower(( Optimal_pos - gyro.getHeading() ) * 0.72 ,-( Optimal_pos - gyro.getHeading() ) * 0.72);//proportional rotation
+            rnr.setPower(-( Optimal_pos - gyro.getHeading() ) * 0.72 ,-( Optimal_pos - gyro.getHeading() ) * 0.72);//proportional rotation
             else if( Optimal_pos-gyro.getHeading() < 0 )
-             rnr.setPower(( Optimal_pos - gyro.getHeading() ) * 0.72 ,( Optimal_pos - gyro.getHeading() ) * 0.72);//proportional rotation
+             rnr.setPower(-( Optimal_pos - gyro.getHeading() ) * 0.72 ,( Optimal_pos - gyro.getHeading() ) * 0.72);//proportional rotation
         }
 
+    /**
+     // place cube where you need to
+     * @param drawer_target_pos specifies where the cube will be placed 1-right, 2-centre, 3-right
+     * ToDo: test to set drawer_tarfet_pos type to vumark types instead of int, so the function to be called straight with the vumark output
+     *
+     */
+    private void Place_Cube  ( int drawer_target_pos) {
+        int nr = 0;
+        while ( true ) {
+            if ( dist_s.getDistance( DistanceUnit.CM ) < 10 && !dist_s_Target )
+            {
+                dist_s_Target = true;
+                nr++;
+                rnr.setPower(-0.6,0.6);
+                if (nr == drawer_target_pos){
+                    rnr.distanceMove(10,0.4);
+                    break;
+                }
+
+            }
+            if ( dist_s.getDistance(DistanceUnit.CM) > 10 && !dist_offset ) dist_offset = true;
+            if ( dist_offset ) dist_s_Target = false;
+
+        }
+
+    }
 }

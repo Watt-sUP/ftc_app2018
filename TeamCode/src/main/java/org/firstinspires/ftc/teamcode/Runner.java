@@ -172,12 +172,10 @@ public class Runner {
         power = Math.abs(power);
         setPower(power, power);
 
-        while(  Math.abs(leftF.getCurrentPosition() - leftF.getTargetPosition()) > 10 ||
-                Math.abs(leftB.getCurrentPosition() - leftB.getTargetPosition()) > 10 ||
-                Math.abs(rightF.getCurrentPosition() - rightF.getTargetPosition()) > 10 ||
-                Math.abs(rightB.getCurrentPosition() - rightB.getTargetPosition()) > 10 ) ;
+        while( leftF.isBusy()||rightF.isBusy()||leftB.isBusy()||rightB.isBusy());
 
         setPower(0.0, 0.0);
+
         setMode(oldMode);
     }
 
@@ -188,9 +186,9 @@ public class Runner {
     public void logInformation(String info)
     {
         if(!verbose)    return;
-        if(info == "Power") telemetry.setValue( leftF.getPower() + " " + leftB.getPower() + " " + rightF.getPower() + " " + rightB.getPower() );
-        if(info == "Power2") telemetry.setValue( leftF.getPower() + " " + rightF.getPower() );
-        if(info == "Position") telemetry.setValue( leftF.getCurrentPosition() + " " + leftB.getCurrentPosition() + " " + rightF.getCurrentPosition() + " " + rightB.getCurrentPosition() );
-        if(info == "Gamepad")   telemetry.setValue( String.format("%.3f", rnrX) + " " + String.format("%.3f", rnrY) + " " + String.format("%.3f", rnrR) );
+        if(info.equals("Power")) telemetry.setValue( leftF.getPower() + " " + leftB.getPower() + " " + rightF.getPower() + " " + rightB.getPower() );
+        if(info.equals("Power2")) telemetry.setValue( leftF.getPower() + " " + rightF.getPower() );
+        if(info.equals("Position")) telemetry.setValue( leftF.getCurrentPosition() + " " + leftB.getCurrentPosition() + " " + rightF.getCurrentPosition() + " " + rightB.getCurrentPosition() );
+        if(info.equals("Gamepad"))   telemetry.setValue( String.format("%.3f", rnrX) + " " + String.format("%.3f", rnrY) + " " + String.format("%.3f", rnrR) );
     }
 }

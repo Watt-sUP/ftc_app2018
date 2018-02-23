@@ -14,7 +14,7 @@ Sample opmodes exist in the FtcRobotController module.
 To locate these samples, find the FtcRobotController module in the "Project/Android" tab.
 
 Expand the following tree elements:
- FtcRobotController / java / org.firstinspires.ftc.robotcontroller / external / samples
+ FtcRobotController / java / or g.firstinspires.ftc.robotcontroller / external / samples
 
 A range of different samples classes can be seen in this folder.
 The class names follow a naming convention which indicates the purpose of each class.
