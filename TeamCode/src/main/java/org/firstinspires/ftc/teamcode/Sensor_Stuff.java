@@ -12,11 +12,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public class Sensor_Stuff {
 
-    Runner rnr;
-    boolean dist_s_Target=false, dist_offset=false ;
-    ModernRoboticsI2cGyro gyro;
-    ModernRoboticsI2cRangeSensor dist_s;
-    ColorSensor c_s;
+    private Runner rnr;
+    private boolean dist_s_Target=false, dist_offset=false ;
+    private ModernRoboticsI2cGyro gyro;
+    private ModernRoboticsI2cRangeSensor dist_s;
+    private ColorSensor c_s;
 
 
     Sensor_Stuff  (ModernRoboticsI2cRangeSensor Ultrasonic_Distance, ModernRoboticsI2cGyro Gyro, ColorSensor cs, Runner x ){
