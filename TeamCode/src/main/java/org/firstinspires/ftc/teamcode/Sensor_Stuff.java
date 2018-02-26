@@ -28,6 +28,8 @@ public class Sensor_Stuff {
     }
     private void  Keep_Orientation  (int Optimal_pos ){
         while( gyro.getHeading() != Optimal_pos )
+            // test to rotate to the smaller angle
+                //ratio
             //ToDo: test if  rotation constant is big enough for rotation to be made when Optimal_pos-gyro.getHeading is small, try a bigger constant
          if( Optimal_pos-gyro.getHeading() > 0 )
             rnr.setPower(-( Optimal_pos - gyro.getHeading() ) * 0.72 ,-( Optimal_pos - gyro.getHeading() ) * 0.72);//proportional rotation
@@ -38,7 +40,7 @@ public class Sensor_Stuff {
     /**
      // place cube where you need to
      * @param drawer_target_pos specifies where the cube will be placed 1-right, 2-centre, 3-right
-     * ToDo: test to set drawer_tarfet_pos type to vumark types instead of int, so the function to be called straight with the vumark output
+     * ToDo: test to set drawer_target_pos type to vumark types instead of int, so the function to be called straight with the vumark output
      *
      */
     private void Place_Cube  ( int drawer_target_pos) {
