@@ -30,7 +30,7 @@ public class Sensor_Stuff {
         while( gyro.getHeading() != Optimal_pos )
             // test to rotate to the smaller angle
                 //ratio
-            //ToDo: test if  rotation constant is big enough for rotation to be made when Optimal_pos-gyro.getHeading is small, try a bigger constant
+            //ToDo: test if  rotation constant is big enough for rotation to be made when Optimal_pos-gyro.getHeading is small, try a bigger/smaller constant
          if( Optimal_pos-gyro.getHeading() > 0 )
             rnr.setPower(-( Optimal_pos - gyro.getHeading() ) * 0.72 ,-( Optimal_pos - gyro.getHeading() ) * 0.72);//proportional rotation
             else if( Optimal_pos-gyro.getHeading() < 0 )
