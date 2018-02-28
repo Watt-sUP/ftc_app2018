@@ -41,7 +41,7 @@ public class Sensor_Stuff {
      // place cube where you need to
      * @param drawer_target_pos specifies where the cube will be placed 1-right, 2-centre, 3-right
      * ToDo: test to set drawer_target_pos type to vumark types instead of int, so the function to be called straight with the vumark output
-     *
+     *ToDo: set distance to look for drawer
      */
     private void Place_Cube  ( int drawer_target_pos) {
         int nr = 0;
