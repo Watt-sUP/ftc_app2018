@@ -48,6 +48,7 @@ public class Sensor_Stuff {
         while ( true ) {
             if ( dist_s.getDistance( DistanceUnit.CM ) < 10 && !dist_s_Target )
             {
+                dist_offset=false;
                 dist_s_Target = true;
                 nr++;
                 rnr.setPower(-0.6,0.6);
