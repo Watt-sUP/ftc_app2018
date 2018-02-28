@@ -56,9 +56,10 @@ public class Sensor_Stuff {
                     break;
                 }
 
-            }
+            
             if ( dist_s.getDistance(DistanceUnit.CM) > 10 && !dist_offset ) dist_offset = true;
             if ( dist_offset ) dist_s_Target = false;
+            }
 
         }
 
