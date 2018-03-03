@@ -20,7 +20,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 public class AutonomousMiddle extends LinearOpMode {
 
     protected ElapsedTime runtime = new ElapsedTime();
-
     /// Runner and Collector
     protected Runner rnr;
     protected CubeCollector collector;
@@ -63,7 +62,16 @@ public class AutonomousMiddle extends LinearOpMode {
 
         gyro = hardwareMap.get(ModernRoboticsI2cGyro.class, "gyro");
         colorSensor = hardwareMap.get(ColorSensor.class, "color");
+        telemetry.log().add("Gyro Calibrating. Do Not Move!");
+        gyro.calibrate();
 
+        // Wait until the gyro calibration is complete
+        runtime.reset();
+        while (!isStopRequested() && gyro.isCalibrating())  {
+            telemetry.addData("calibrating", "%s", Math.round(runtime.seconds())%2==0 ? "|.." : "..|");
+            telemetry.update();
+            sleep(50);
+        }
         telemetry.update();
 
         waitForStart();
@@ -80,6 +88,7 @@ public class AutonomousMiddle extends LinearOpMode {
         /// TODO: place cube
 
     }
+
 
     protected void Keep_Orientation(int Optimal_pos)
     {
