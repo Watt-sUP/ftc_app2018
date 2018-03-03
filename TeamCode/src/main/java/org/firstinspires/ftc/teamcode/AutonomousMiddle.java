@@ -29,7 +29,7 @@ public class AutonomousMiddle extends LinearOpMode {
     protected ModernRoboticsI2cGyro gyro;
     protected ModernRoboticsI2cRangeSensor dist_s;
     protected ColorSensor colorSensor;
-    protected boolean dist_s_Target=false, dist_offset=false ;
+    protected boolean dist_s_Target = false, dist_offset = false;
 
     /// Variables
     protected static int forward = 0;
@@ -69,39 +69,47 @@ public class AutonomousMiddle extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
+        /// TODO: get color and score jewels
 
-        /// TODO: complete autonomous
+        /// TODO: get down from platform and calibrate
+
+        /// TODO: move until get in from of drawer
+
+        /// TODO: rotate 90 degrees
+
+        /// TODO: place cube
 
     }
 
-    protected void  Keep_Orientation  (int Optimal_pos)
+    protected void Keep_Orientation(int Optimal_pos)
     {
-        while( gyro.getHeading() != Optimal_pos )
+        while (gyro.getHeading() != Optimal_pos)
         {
             int heading = gyro.getHeading();
 
             int left = 0;
-            if(Optimal_pos > heading)   left = heading + 360 - Optimal_pos;
-            else                        left = heading - Optimal_pos;
+            if (Optimal_pos > heading) left = heading + 360 - Optimal_pos;
+            else left = heading - Optimal_pos;
 
             int right = 0;
-            if(Optimal_pos > heading)   right = Optimal_pos - heading;
-            else                        right = Optimal_pos + 360 - heading;
+            if (Optimal_pos > heading) right = Optimal_pos - heading;
+            else right = Optimal_pos + 360 - heading;
 
-            if(left < right)
+            if (left < right)
                 rnr.setPower(left, left, 0.1);
             else
                 rnr.setPower(right, right, 0.1);
         }
     }
 
-    protected void Place_Cube  ( int drawer_target_pos) {
-
-
+    /// left =  1, center = 2, right = 3
+    protected void Place_Cube(int drawer_target_pos)
+    {
         int nr = 0;
         double last_dist = dist_s.getDistance(DistanceUnit.CM);
 
-        while (true) {
+        while (true)
+        {
 
             if (last_dist - dist_s.getDistance(DistanceUnit.CM) >= 7 && !dist_s_Target) {
                 dist_offset = false;
@@ -122,3 +130,4 @@ public class AutonomousMiddle extends LinearOpMode {
         }
 
     }
+}
