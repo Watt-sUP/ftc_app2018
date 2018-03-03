@@ -60,19 +60,19 @@ public class AutonomousMiddle extends LinearOpMode {
                 collectorTelemetry
         );
 
+        Telemetry.Item gyroTelemetry = telemetry.addData("Gyro", "Not initialized");
         gyro = hardwareMap.get(ModernRoboticsI2cGyro.class, "gyro");
-        colorSensor = hardwareMap.get(ColorSensor.class, "color");
-        telemetry.log().add("Gyro Calibrating. Do Not Move!");
+        gyroTelemetry.setValue("Calibrating...");
         gyro.calibrate();
-
-        // Wait until the gyro calibration is complete
-        runtime.reset();
         while (!isStopRequested() && gyro.isCalibrating())  {
-            telemetry.addData("calibrating", "%s", Math.round(runtime.seconds())%2==0 ? "|.." : "..|");
+            gyroTelemetry.setValue("Calibrating...");
             telemetry.update();
             sleep(50);
         }
         telemetry.update();
+
+        Telemetry.Item colorTelemtry = telemetry.addData("Color", 0);
+        colorSensor = hardwareMap.get(ColorSensor.class, "color");
 
         waitForStart();
         runtime.reset();
