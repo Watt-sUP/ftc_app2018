@@ -105,19 +105,22 @@ public class AutonomousMiddle extends LinearOpMode {
     /// left =  1, center = 2, right = 3
     protected void Place_Cube(int drawer_target_pos)
     {
+        rnr.setPower( -0.5, 0.5 );
         int nr = 0;
-        double last_dist = dist_s.getDistance(DistanceUnit.CM);
+        double last_dist = dist_s.getDistance ( DistanceUnit.CM );
 
-        while (true)
+        while ( true )
         {
 
-            if (last_dist - dist_s.getDistance(DistanceUnit.CM) >= 7 && !dist_s_Target) {
+            if ( last_dist - dist_s.getDistance( DistanceUnit.CM ) >= 7 && !dist_s_Target) {
                 dist_offset = false;
                 dist_s_Target = true;
                 nr++;
-                rnr.setPower(-0.6, 0.6);
+                rnr.setPower( -0.6, 0.6 );
+                collector.changeState( 3 );
                 if (nr == drawer_target_pos) {
                     rnr.distanceMove(10, 0.4);
+                    collector.changeState(3);
                     break;
                 }
 
