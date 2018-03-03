@@ -12,8 +12,13 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 @Autonomous(name="Autonomous Middle", group="Linear Opmode")
 @Disabled
@@ -33,6 +38,9 @@ public class AutonomousMiddle extends LinearOpMode {
     /// Variables
     protected static int forward = 0;
     protected static int color = 0;    /// Red = 0, Blue = 1
+
+    /// Vuforia
+    protected VuforiaLocalizer vuforia;
 
     @Override
     public void runOpMode() {
@@ -77,6 +85,12 @@ public class AutonomousMiddle extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
+        ////////////////////////// START
+
+        /// Gets key drawer
+        int drawer = getKeyDrawer();
+        if(forward == 1)    drawer = 4 - drawer;
+
         /// TODO: get color and score jewels
 
         /// TODO: get down from platform and calibrate
@@ -87,6 +101,33 @@ public class AutonomousMiddle extends LinearOpMode {
 
         /// TODO: place cube
 
+    }
+
+    /**
+     * Gets key drawer with Vuforia
+     * LEFT = 1
+     * CENTER = 2
+     * RIGHT = 3
+     * UNKNOWN = 2
+     * @return  key drawer
+     */
+    protected int getKeyDrawer()
+    {
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+        parameters.vuforiaLicenseKey = "AT4pxIn/////AAAAGSL31MQ2OkEAlE8fAGFaXLprsCGiwn5e81ZDhALBFUMK45pVGTrKvkFV9ZBC8LGo2fubVHcyc2JBpk2bsXVf/0zESirRkEkFjIItegiTFBB6wwQeeBcANTIZAFH1EjAo6QDGxlMTyhJ6JJQmrm2yBPFJFpfWDus1E34IVIyLHc8V/iCSTuegaorAlk1MXV7r2jog5G5rwsWhfD6CDx2E85s1cD20eEC4XQqx2pgcbG0CB1ohiPIYG0jtj373VY8gn9PfX2YJDBe/sLAx4IbxQxvtpgL5PAhAFcTdPfYAi6GmUzLbWQDITzao3dFlxiJjRA8fklV5KsBKJFj6viP+m3HybrTgW6kR+VOFbU2J2wD8";
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
+        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
+        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
+        VuforiaTrackable relicTemplate = relicTrackables.get(0);
+        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
+        relicTrackables.activate();
+        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+
+        if(vuMark == RelicRecoveryVuMark.LEFT)  return 1;
+        if(vuMark == RelicRecoveryVuMark.CENTER)    return 2;
+        if(vuMark == RelicRecoveryVuMark.RIGHT) return 3;
+        return 2;
     }
 
 
@@ -113,34 +154,34 @@ public class AutonomousMiddle extends LinearOpMode {
 
     // left =  1, center = 2, right = 3
 
-        protected void go_to_drawer (int drawer_target_pos )
-        {
+    protected void go_to_drawer (int drawer_target_pos )
+    {
 
-            rnr.setPower(-0.5,0.5);
+        rnr.setPower(-0.5,0.5);
 
-            int nr = 0;
+        int nr = 0;
 
-            double last_dist = dist_s.getDistance(DistanceUnit.CM);
+        double last_dist = dist_s.getDistance(DistanceUnit.CM);
 
-            while ( nr<drawer_target_pos )
-                if( last_dist - dist_s.getDistance ( DistanceUnit.CM ) >= 7 )
-                {
-                    nr ++;
-                    last_dist = dist_s.getDistance( DistanceUnit.CM );
-                }
+        while ( nr<drawer_target_pos )
+            if( last_dist - dist_s.getDistance ( DistanceUnit.CM ) >= 7 )
+            {
+                nr ++;
+                last_dist = dist_s.getDistance( DistanceUnit.CM );
+            }
 
-            rnr.setPower(0.0,0.0);
+        rnr.setPower(0.0,0.0);
 
-            //places the robot in the middle of the (night :))) drawer space
-            rnr.distanceMove(10, 0.4);
-        }
-        protected void place_cube()
-        {
-            //places cube inside drawer
-            rnr.distanceMove(15, 0.6);
-
-            //drops the cube
-            collector.changeState( 3 );
-        }
-
+        //places the robot in the middle of the (night :))) drawer space
+        rnr.distanceMove(10, 0.4);
     }
+    protected void place_cube()
+    {
+        //places cube inside drawer
+        rnr.distanceMove(15, 0.6);
+
+        //drops the cube
+        collector.changeState( 3 );
+    }
+
+}
