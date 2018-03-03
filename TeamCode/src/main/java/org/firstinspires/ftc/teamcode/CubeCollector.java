@@ -145,6 +145,48 @@ public class CubeCollector
     }
 
     /**
+     * Opens the arms
+     * @param ids ID-s of the servos
+     *            1 = upper servos
+     *            2 = lower servos
+     *            3 = upper + lower servos
+     */
+    public void openArms(int ids)
+    {
+        if( (ids & 1) > 0 )
+        {
+            upL.setPosition(openP[0]);
+            upR.setPosition(openP[1]);
+        }
+        if( (ids & 2) > 0 )
+        {
+            downL.setPosition(openP[2]);
+            downR.setPosition(openP[3]);
+        }
+    }
+
+    /**
+     * Closes the arms
+     * @param ids ID-s of the servos
+     *            1 = upper servos
+     *            2 = lower servos
+     *            3 = upper + lower servos
+     */
+    public void closeArms(int ids)
+    {
+        if( (ids & 1) > 0 )
+        {
+            upL.setPosition(closeP[0]);
+            upR.setPosition(closeP[1]);
+        }
+        if( (ids & 2) > 0 )
+        {
+            downL.setPosition(closeP[2]);
+            downR.setPosition(closeP[3]);
+        }
+    }
+
+    /**
      * Set servos to middle position
      * @param ids ID-s of the servos
      *            1 = upper servos
