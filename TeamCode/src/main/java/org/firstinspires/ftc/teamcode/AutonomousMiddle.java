@@ -31,9 +31,8 @@ public class AutonomousMiddle extends LinearOpMode {
 
     /// Sensors
     protected ModernRoboticsI2cGyro gyro;
-    protected ModernRoboticsI2cRangeSensor dist_s;
+    protected ModernRoboticsI2cRangeSensor dist_r;
     protected ColorSensor colorSensor;
-    protected boolean dist_s_Target = false, dist_offset = false;
 
     /// Variables
     protected static int forward = 0;
@@ -152,29 +151,26 @@ public class AutonomousMiddle extends LinearOpMode {
         }
     }
 
-    // left =  1, center = 2, right = 3
-
     protected void go_to_drawer (int drawer_target_pos )
     {
-
-        rnr.setPower(-0.5,0.5);
+        rnr.setPower(-1,1, 0.5 * forward);
 
         int nr = 0;
-
-        double last_dist = dist_s.getDistance(DistanceUnit.CM);
-
-        while ( nr<drawer_target_pos )
-            if( last_dist - dist_s.getDistance ( DistanceUnit.CM ) >= 7 )
-            {
+        double last_dist = dist_r.getDistance(DistanceUnit.CM);
+        while ( nr < drawer_target_pos )
+        {
+            double dist = dist_r.getDistance ( DistanceUnit.CM );
+            if( last_dist - dist >= 7 )
                 nr ++;
-                last_dist = dist_s.getDistance( DistanceUnit.CM );
-            }
+            last_dist = dist;
+        }
 
         rnr.setPower(0.0,0.0);
 
         //places the robot in the middle of the (night :))) drawer space
-        rnr.distanceMove(10, 0.4);
+        rnr.distanceMove(10 * forward, 0.4);
     }
+
     protected void place_cube()
     {
         //places cube inside drawer
