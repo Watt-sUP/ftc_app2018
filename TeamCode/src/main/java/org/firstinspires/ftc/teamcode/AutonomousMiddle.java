@@ -86,6 +86,9 @@ public class AutonomousMiddle extends LinearOpMode {
 
         ////////////////////////// START
 
+        /// Grab cube
+        grab_cube();
+
         /// Gets key drawer
         int drawer = getKeyDrawer();
         if(forward == 1)    drawer = 4 - drawer;
@@ -94,12 +97,13 @@ public class AutonomousMiddle extends LinearOpMode {
 
         /// TODO: get down from platform and calibrate
 
-        /// TODO: go to drawer
+        /// Go in front of drawer
+        go_to_drawer(drawer);
 
         /// TODO: rotate 90 degrees
 
-        /// TODO: place cube
-
+        /// Place cube
+        place_cube();
     }
 
     /**
@@ -128,7 +132,6 @@ public class AutonomousMiddle extends LinearOpMode {
         if(vuMark == RelicRecoveryVuMark.RIGHT) return 3;
         return 2;
     }
-
 
     protected void Keep_Orientation(int Optimal_pos)
     {
@@ -177,7 +180,14 @@ public class AutonomousMiddle extends LinearOpMode {
         rnr.distanceMove(15, 0.6);
 
         //drops the cube
-        collector.changeState( 3 );
+        collector.openArms(3);
     }
 
+    protected void grab_cube()
+    {
+        collector.closeArms(1);
+        collector.moveLift(-0.5);
+        sleep(50);
+        collector.moveLift(0.0);
+    }
 }
