@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 @Autonomous(name="Autonomous Middle", group="Linear Opmode")
 @Disabled
@@ -28,7 +29,7 @@ public class AutonomousMiddle extends LinearOpMode {
     protected ModernRoboticsI2cGyro gyro;
     protected ModernRoboticsI2cRangeSensor dist_s;
     protected ColorSensor colorSensor;
-
+    protected boolean dist_s_Target=false, dist_offset=false ;
 
     /// Variables
     protected static int forward = 0;
@@ -93,4 +94,31 @@ public class AutonomousMiddle extends LinearOpMode {
                 rnr.setPower(right, right, 0.1);
         }
     }
-}
+
+    protected void Place_Cube  ( int drawer_target_pos) {
+
+
+        int nr = 0;
+        double last_dist = dist_s.getDistance(DistanceUnit.CM);
+
+        while (true) {
+
+            if (last_dist - dist_s.getDistance(DistanceUnit.CM) >= 7 && !dist_s_Target) {
+                dist_offset = false;
+                dist_s_Target = true;
+                nr++;
+                rnr.setPower(-0.6, 0.6);
+                if (nr == drawer_target_pos) {
+                    rnr.distanceMove(10, 0.4);
+                    break;
+                }
+
+
+                if (last_dist - dist_s.getDistance(DistanceUnit.CM) >= 7 && !dist_offset)
+                    dist_offset = true;
+                if (dist_offset) dist_s_Target = false;
+            }
+
+        }
+
+    }
