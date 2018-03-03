@@ -81,7 +81,7 @@ public class AutonomousMiddle extends LinearOpMode {
 
         /// TODO: get down from platform and calibrate
 
-        /// TODO: move until get in from of drawer
+        /// TODO: go to drawer
 
         /// TODO: rotate 90 degrees
 
@@ -111,35 +111,36 @@ public class AutonomousMiddle extends LinearOpMode {
         }
     }
 
-    /// left =  1, center = 2, right = 3
-    protected void Place_Cube(int drawer_target_pos)
-    {
-        rnr.setPower( -0.5, 0.5 );
-        int nr = 0;
-        double last_dist = dist_s.getDistance ( DistanceUnit.CM );
+    // left =  1, center = 2, right = 3
 
-        while ( true )
+        protected void go_to_drawer (int drawer_target_pos )
         {
 
-            if ( last_dist - dist_s.getDistance( DistanceUnit.CM ) >= 7 && !dist_s_Target) {
-                dist_offset = false;
-                dist_s_Target = true;
-                nr++;
-                rnr.setPower( -0.6, 0.6 );
-                collector.changeState( 3 );
-                if (nr == drawer_target_pos) {
-                    rnr.distanceMove(10, 0.4);
-                    collector.changeState(3);
-                    break;
+            rnr.setPower(-0.5,0.5);
+
+            int nr = 0;
+
+            double last_dist = dist_s.getDistance(DistanceUnit.CM);
+
+            while ( nr<drawer_target_pos )
+                if( last_dist - dist_s.getDistance ( DistanceUnit.CM ) >= 7 )
+                {
+                    nr ++;
+                    last_dist = dist_s.getDistance( DistanceUnit.CM );
                 }
 
+            rnr.setPower(0.0,0.0);
 
-                if (last_dist - dist_s.getDistance(DistanceUnit.CM) >= 7 && !dist_offset)
-                    dist_offset = true;
-                if (dist_offset) dist_s_Target = false;
-            }
+            //places the robot in the middle of the (night :))) drawer space
+            rnr.distanceMove(10, 0.4);
+        }
+        protected void place_cube()
+        {
+            //places cube inside drawer
+            rnr.distanceMove(15, 0.6);
 
+            //drops the cube
+            collector.changeState( 3 );
         }
 
     }
-}
