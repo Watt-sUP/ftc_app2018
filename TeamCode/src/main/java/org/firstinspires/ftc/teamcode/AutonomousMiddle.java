@@ -95,15 +95,16 @@ public class AutonomousMiddle extends LinearOpMode {
 
         /// TODO: get color and score jewels
 
-        /// TODO: get down from platform and calibrate
-
         /// Go in front of drawer
         go_to_drawer(drawer);
 
-        /// TODO: rotate 90 degrees
+        /// Rotate 90 degrees
+        Keep_Orientation(90);
 
         /// Place cube
         place_cube();
+
+        /// TODO: get more cubes
     }
 
     /**
@@ -156,6 +157,7 @@ public class AutonomousMiddle extends LinearOpMode {
 
     protected void go_to_drawer (int drawer_target_pos )
     {
+        int orientation = gyro.getHeading();
         rnr.setPower(-1,1, 0.5 * forward);
 
         int nr = 0;
@@ -166,6 +168,7 @@ public class AutonomousMiddle extends LinearOpMode {
             if( last_dist - dist >= 7 )
                 nr ++;
             last_dist = dist;
+            Keep_Orientation(orientation);
         }
 
         rnr.setPower(0.0,0.0);
