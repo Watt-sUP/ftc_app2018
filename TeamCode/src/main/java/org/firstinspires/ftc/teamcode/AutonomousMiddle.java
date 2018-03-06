@@ -210,9 +210,9 @@ public class AutonomousMiddle extends LinearOpMode {
             if( Math.min(left, right) <= okDegrees ) return;
 
             if (left < right)
-                rnr.setPower(left, left, 0.005);
+                rnr.setPower(left, left, 0.008);
             else
-                rnr.setPower(-right, -right, 0.005);
+                rnr.setPower(-right, -right, 0.008);
 
             if( !opModeIsActive() ) return;
         }
@@ -237,12 +237,15 @@ public class AutonomousMiddle extends LinearOpMode {
         while ( nr < drawer_target_pos )
         {
 
-            double dist = dist_r.getDistance ( DistanceUnit.CM );
+            double dist = dist_r.getDistance(DistanceUnit.CM);
             if( last_dist - dist >= 6 )
                 nr ++;
             last_dist = dist;
             Keep_Orientation(orientation);
-            rnr.setPower(-1,1, initPower * forward);
+            if(nr < 1)
+                rnr.setPower(-1,1, initPower * forward);
+            else
+                rnr.setPower(-1, 1, initPower * 0.25 * forward);
 
             rangeTelemetry.setValue( String.format("%.3f", dist));
             nrTelemetry.setValue(nr);
