@@ -104,6 +104,7 @@ public class AutonomousMiddle extends LinearOpMode {
         ////////////////////////// START
 
         /// Grab cube
+
         state.setValue("grab cube");
         telemetry.update();
         grab_cube();
@@ -127,7 +128,7 @@ public class AutonomousMiddle extends LinearOpMode {
         /// Rotate 90 degrees
         state.setValue("rotate");
         telemetry.update();
-        Keep_Orientation(90);
+        Keep_Orientation(270);
         if( !opModeIsActive() ) return;
 
         /// Place cube
@@ -195,12 +196,12 @@ public class AutonomousMiddle extends LinearOpMode {
             int heading = gyro.getHeading();
 
             int left = 0;
-            if (Optimal_pos > heading) left = heading + 360 - Optimal_pos;
-            else left = heading - Optimal_pos;
+            if (Optimal_pos > heading) left = -heading + Optimal_pos;
+            else left = -heading + 360 + Optimal_pos;
 
             int right = 0;
-            if (Optimal_pos > heading) right = Optimal_pos - heading;
-            else right = Optimal_pos + 360 - heading;
+            if (Optimal_pos > heading) right = -Optimal_pos + heading + 360;
+            else right = -Optimal_pos + heading;
 
             lft.setValue(left);
             rgt.setValue(right);
@@ -209,9 +210,9 @@ public class AutonomousMiddle extends LinearOpMode {
             if( Math.min(left, right) <= okDegrees ) return;
 
             if (left < right)
-                rnr.setPower(-left, -left, 0.005);
+                rnr.setPower(left, left, 0.005);
             else
-                rnr.setPower(right, right, 0.005);
+                rnr.setPower(-right, -right, 0.005);
 
             if( !opModeIsActive() ) return;
         }
