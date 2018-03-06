@@ -76,33 +76,47 @@ public class AutonomousMiddle extends LinearOpMode {
             telemetry.update();
             sleep(50);
         }
+        gyroTelemetry.setValue("Calibrated!");
+        telemetry.update();
+
+        dist_r = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "distr");
+
         telemetry.update();
 
         Telemetry.Item colorTelemtry = telemetry.addData("Color", 0);
-        colorSensor = hardwareMap.get(ColorSensor.class, "color");
+        //colorSensor = hardwareMap.get(ColorSensor.class, "color");
+
+        //if( !opModeIsActive() ) return;
 
         waitForStart();
         runtime.reset();
+
+        if( !opModeIsActive() ) return;
 
         ////////////////////////// START
 
         /// Grab cube
         grab_cube();
+        if( !opModeIsActive() ) return;
 
         /// Gets key drawer
         int drawer = getKeyDrawer();
         if(forward == 1)    drawer = 4 - drawer;
+        if( !opModeIsActive() ) return;
 
         /// TODO: get color and score jewels
 
         /// Go in front of drawer
         go_to_drawer(drawer);
+        if( !opModeIsActive() ) return;
 
         /// Rotate 90 degrees
         Keep_Orientation(90);
+        if( !opModeIsActive() ) return;
 
         /// Place cube
         place_cube();
+        if( !opModeIsActive() ) return;
 
         /// TODO: get more cubes
     }
@@ -117,6 +131,8 @@ public class AutonomousMiddle extends LinearOpMode {
      */
     protected int getKeyDrawer()
     {
+        if(true)   return 1;
+
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
         parameters.vuforiaLicenseKey = "AT4pxIn/////AAAAGSL31MQ2OkEAlE8fAGFaXLprsCGiwn5e81ZDhALBFUMK45pVGTrKvkFV9ZBC8LGo2fubVHcyc2JBpk2bsXVf/0zESirRkEkFjIItegiTFBB6wwQeeBcANTIZAFH1EjAo6QDGxlMTyhJ6JJQmrm2yBPFJFpfWDus1E34IVIyLHc8V/iCSTuegaorAlk1MXV7r2jog5G5rwsWhfD6CDx2E85s1cD20eEC4XQqx2pgcbG0CB1ohiPIYG0jtj373VY8gn9PfX2YJDBe/sLAx4IbxQxvtpgL5PAhAFcTdPfYAi6GmUzLbWQDITzao3dFlxiJjRA8fklV5KsBKJFj6viP+m3HybrTgW6kR+VOFbU2J2wD8";
@@ -152,6 +168,8 @@ public class AutonomousMiddle extends LinearOpMode {
                 rnr.setPower(left, left, 0.1);
             else
                 rnr.setPower(right, right, 0.1);
+
+            if( !opModeIsActive() ) return;
         }
     }
 
@@ -169,6 +187,8 @@ public class AutonomousMiddle extends LinearOpMode {
                 nr ++;
             last_dist = dist;
             Keep_Orientation(orientation);
+
+            if( !opModeIsActive() ) return;
         }
 
         rnr.setPower(0.0,0.0);
@@ -190,7 +210,7 @@ public class AutonomousMiddle extends LinearOpMode {
     {
         collector.closeArms(1);
         collector.moveLift(-0.5);
-        sleep(50);
+        sleep(200);
         collector.moveLift(0.0);
     }
 }
