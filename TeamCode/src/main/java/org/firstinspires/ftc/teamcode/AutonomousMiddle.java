@@ -43,6 +43,7 @@ public class AutonomousMiddle extends LinearOpMode {
 
     /// Telemetry
     Telemetry.Item gyroTelemetry, rangeTelemetry, nrTelemetry;
+    Telemetry.Item lft, rgt;
 
     @Override
     public void runOpMode() {
@@ -96,7 +97,7 @@ public class AutonomousMiddle extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-        rnr.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rnr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         collector.setLiftMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
 
@@ -132,7 +133,7 @@ public class AutonomousMiddle extends LinearOpMode {
         /// Place cube
         state.setValue("place cube");
         telemetry.update();
-        place_cube();
+        //place_cube();
         if( !opModeIsActive() ) return;
 
         /// TODO: get more cubes
@@ -184,7 +185,7 @@ public class AutonomousMiddle extends LinearOpMode {
 
     protected void Keep_Orientation(int Optimal_pos)
     {
-        int okDegrees = 5;
+        int okDegrees = 2;
 
         while (gyro.getHeading() != Optimal_pos)
         {
@@ -201,12 +202,16 @@ public class AutonomousMiddle extends LinearOpMode {
             if (Optimal_pos > heading) right = Optimal_pos - heading;
             else right = Optimal_pos + 360 - heading;
 
+            lft.setValue(left);
+            rgt.setValue(right);
+            telemetry.update();
+
             if( Math.min(left, right) <= okDegrees ) return;
 
             if (left < right)
-                rnr.setPower(left, left, 0.005);
+                rnr.setPower(-left, -left, 0.005);
             else
-                rnr.setPower(-right, -right, 0.005);
+                rnr.setPower(right, right, 0.005);
 
             if( !opModeIsActive() ) return;
         }
@@ -224,13 +229,15 @@ public class AutonomousMiddle extends LinearOpMode {
 
         rangeTelemetry = telemetry.addData("Range", String.format("%.3f", last_dist));
         nrTelemetry = telemetry.addData("Nr", nr);
+        lft = telemetry.addData("Left", -1);
+        rgt = telemetry.addData("Right", -1);
         telemetry.update();
 
         while ( nr < drawer_target_pos )
         {
 
             double dist = dist_r.getDistance ( DistanceUnit.CM );
-            if( last_dist - dist >= 7 )
+            if( last_dist - dist >= 6 )
                 nr ++;
             last_dist = dist;
             Keep_Orientation(orientation);
@@ -247,7 +254,7 @@ public class AutonomousMiddle extends LinearOpMode {
         rnr.setPower(0.0,0.0);
 
         //places the robot in the middle of the (night :))) drawer space
-        rnr.distanceMove(10 * forward, 0.4);
+        //rnr.distanceMove(10 * forward, 0.4);
     }
 
     protected void place_cube()
