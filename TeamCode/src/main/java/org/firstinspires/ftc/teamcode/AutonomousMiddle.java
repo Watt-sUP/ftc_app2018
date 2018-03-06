@@ -41,6 +41,9 @@ public class AutonomousMiddle extends LinearOpMode {
     /// Vuforia
     protected VuforiaLocalizer vuforia;
 
+    /// Telemetry
+    Telemetry.Item gyroTelemetry, rangeTelemetry, nrTelemetry;
+
     @Override
     public void runOpMode() {
         /// Initialize objects
@@ -69,7 +72,7 @@ public class AutonomousMiddle extends LinearOpMode {
                 collectorTelemetry
         );
 
-        Telemetry.Item gyroTelemetry = telemetry.addData("Gyro", "Not initialized");
+        gyroTelemetry = telemetry.addData("Gyro", "Not initialized");
         gyro = hardwareMap.get(ModernRoboticsI2cGyro.class, "gyro");
         gyroTelemetry.setValue("Calibrating...");
         gyro.calibrate();
@@ -164,10 +167,30 @@ public class AutonomousMiddle extends LinearOpMode {
         return 2;
     }
 
+    /*protected void  Keep_Orientation  (int Optimal_pos ){
+        while( !(Optimal_pos - 3 <= gyro.getHeading() && gyro.getHeading() <= Optimal_pos + 3) ) {
+            gyroTelemetry.setValue(gyro.getHeading());
+            telemetry.update();
+            // test to rotate to the smaller angle
+            //ratio
+            //ToDo: test if  rotation constant is big enough for rotation to be made when Optimal_pos-gyro.getHeading is small, try a bigger/smaller constant
+            if (Optimal_pos - gyro.getHeading() < 0)
+                rnr.setPower((Optimal_pos - gyro.getHeading()) * 0.04, -(Optimal_pos - gyro.getHeading()) * 0.04);//proportional rotation
+            else if (Optimal_pos - gyro.getHeading() > 0)
+                rnr.setPower((Optimal_pos - gyro.getHeading()) * 0.04, -(Optimal_pos - gyro.getHeading()) * 0.04);//proportional rotation
+        }
+    }*/
+
+
     protected void Keep_Orientation(int Optimal_pos)
     {
+        int okDegrees = 5;
+
         while (gyro.getHeading() != Optimal_pos)
         {
+            gyroTelemetry.setValue(gyro.getHeading());
+            telemetry.update();
+
             int heading = gyro.getHeading();
 
             int left = 0;
@@ -178,10 +201,12 @@ public class AutonomousMiddle extends LinearOpMode {
             if (Optimal_pos > heading) right = Optimal_pos - heading;
             else right = Optimal_pos + 360 - heading;
 
+            if( Math.min(left, right) <= okDegrees ) return;
+
             if (left < right)
-                rnr.setPower(left, left, 0.1);
+                rnr.setPower(left, left, 0.005);
             else
-                rnr.setPower(right, right, 0.1);
+                rnr.setPower(-right, -right, 0.005);
 
             if( !opModeIsActive() ) return;
         }
@@ -189,18 +214,32 @@ public class AutonomousMiddle extends LinearOpMode {
 
     protected void go_to_drawer (int drawer_target_pos )
     {
+        double initPower = 0.4;
+
         int orientation = gyro.getHeading();
-        rnr.setPower(-1,1, 0.35 * forward);
+        rnr.setPower(-1,1, initPower * forward);
 
         int nr = 0;
         double last_dist = dist_r.getDistance(DistanceUnit.CM);
+
+        rangeTelemetry = telemetry.addData("Range", String.format("%.3f", last_dist));
+        nrTelemetry = telemetry.addData("Nr", nr);
+        telemetry.update();
+
         while ( nr < drawer_target_pos )
         {
+
             double dist = dist_r.getDistance ( DistanceUnit.CM );
             if( last_dist - dist >= 7 )
                 nr ++;
             last_dist = dist;
             Keep_Orientation(orientation);
+            rnr.setPower(-1,1, initPower * forward);
+
+            rangeTelemetry.setValue( String.format("%.3f", dist));
+            nrTelemetry.setValue(nr);
+            gyroTelemetry.setValue(gyro.getHeading());
+            telemetry.update();
 
             if( !opModeIsActive() ) return;
         }
@@ -223,7 +262,7 @@ public class AutonomousMiddle extends LinearOpMode {
     protected void grab_cube()
     {
         collector.closeArms(1);
-        collector.moveLift(-0.5);
+        collector.moveLift(0.0);
         sleep(500);
         collector.moveLift(0.0);
     }
