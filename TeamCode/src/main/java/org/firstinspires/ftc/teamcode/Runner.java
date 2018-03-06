@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -62,6 +63,11 @@ public class Runner {
             verbose = false;
 
         initialCheck();
+
+        leftF.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftB.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightF.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightB.setDirection(DcMotorSimple.Direction.REVERSE);
 
         ticksPerRevolution = leftF.getMotorType().getTicksPerRev();
     }

@@ -46,6 +46,8 @@ public class AutonomousMiddle extends LinearOpMode {
         /// Initialize objects
         telemetry.setAutoClear(false);
 
+        Telemetry.Item state = telemetry.addData("State", "init");
+
         Telemetry.Item timeTelemetry = telemetry.addData("Time", 0);
 
         Telemetry.Item runnerTelemetry = telemetry.addData("Runner", 0);
@@ -91,15 +93,21 @@ public class AutonomousMiddle extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-        if( !opModeIsActive() ) return;
+        rnr.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        collector.setLiftMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
 
         ////////////////////////// START
 
         /// Grab cube
+        state.setValue("grab cube");
+        telemetry.update();
         grab_cube();
         if( !opModeIsActive() ) return;
 
         /// Gets key drawer
+        state.setValue("get key drawer");
+        telemetry.update();
         int drawer = getKeyDrawer();
         if(forward == 1)    drawer = 4 - drawer;
         if( !opModeIsActive() ) return;
@@ -107,14 +115,20 @@ public class AutonomousMiddle extends LinearOpMode {
         /// TODO: get color and score jewels
 
         /// Go in front of drawer
+        state.setValue("go to drawer");
+        telemetry.update();
         go_to_drawer(drawer);
         if( !opModeIsActive() ) return;
 
         /// Rotate 90 degrees
+        state.setValue("rotate");
+        telemetry.update();
         Keep_Orientation(90);
         if( !opModeIsActive() ) return;
 
         /// Place cube
+        state.setValue("place cube");
+        telemetry.update();
         place_cube();
         if( !opModeIsActive() ) return;
 
@@ -176,7 +190,7 @@ public class AutonomousMiddle extends LinearOpMode {
     protected void go_to_drawer (int drawer_target_pos )
     {
         int orientation = gyro.getHeading();
-        rnr.setPower(-1,1, 0.5 * forward);
+        rnr.setPower(-1,1, 0.35 * forward);
 
         int nr = 0;
         double last_dist = dist_r.getDistance(DistanceUnit.CM);
@@ -210,7 +224,7 @@ public class AutonomousMiddle extends LinearOpMode {
     {
         collector.closeArms(1);
         collector.moveLift(-0.5);
-        sleep(200);
+        sleep(500);
         collector.moveLift(0.0);
     }
 }
