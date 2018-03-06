@@ -170,8 +170,8 @@ public class Runner {
         DcMotor.RunMode oldMode = leftF.getMode();
 
         setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        leftF.setTargetPosition( leftF.getCurrentPosition() + add );
-        leftB.setTargetPosition( leftB.getCurrentPosition() + add );
+        leftF.setTargetPosition( leftF.getCurrentPosition() - add );
+        leftB.setTargetPosition( leftB.getCurrentPosition() - add );
         rightF.setTargetPosition( rightF.getCurrentPosition() + add );
         rightB.setTargetPosition( rightB.getCurrentPosition() + add );
 
