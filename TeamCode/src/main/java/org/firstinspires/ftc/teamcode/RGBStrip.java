@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 /**
- * RGBStrip class is used to controll the RGB strip attached to robot. :) (#Duta)
+ * RGBStrip class is used to control the RGB strip attached to robot. :) (#Duta)
  */
 public class RGBStrip
 {
