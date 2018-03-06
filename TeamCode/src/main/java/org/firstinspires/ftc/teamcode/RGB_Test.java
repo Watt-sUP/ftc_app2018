@@ -1,0 +1,103 @@
+/* Copyright (c) 2017 FIRST. All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted (subject to the limitations in the disclaimer below) provided that
+ * the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this list
+ * of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the name of FIRST nor the names of its contributors may be used to endorse or
+ * promote products derived from this software without specific prior written permission.
+ *
+ * NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
+ * LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+ * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+package org.firstinspires.ftc.teamcode;
+
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
+@TeleOp(name="RGB Test", group="Linear Opmode")
+//@Disabled
+public class RGB_Test extends LinearOpMode {
+
+    private ElapsedTime runtime = new ElapsedTime();
+    private RGBStrip rgb;
+
+    @Override
+    public void runOpMode() {
+
+
+        Telemetry.Item rgbTelemetry = telemetry.addData("+RGB: ", 0);
+        rgb = new RGBStrip(hardwareMap.get(DcMotor.class, "plus"),
+                            hardwareMap.get(DcMotor.class, "red"),
+                            hardwareMap.get(DcMotor.class, "green"),
+                            hardwareMap.get(DcMotor.class, "blue"),
+                            rgbTelemetry);
+
+        waitForStart();
+        runtime.reset();
+
+        int mode = 0;
+        boolean up = false, down = false;
+        int r = 0;
+        int g = 0;
+        int b = 0;
+
+        while (opModeIsActive())
+        {
+            if(gamepad1.b)    mode = 0;
+            if(gamepad1.a)   mode = 1;
+            if(gamepad1.x) mode = 2;
+
+            if(gamepad1.dpad_up)
+            {
+                if(!up)
+                {
+                    if(mode == 0)   r = Math.min(255, r + 10);
+                    if(mode == 1)   g = Math.min(255, g + 10);
+                    if(mode == 2)   b = Math.min(255, b + 10);
+                    up = true;
+                }
+            }
+            else up = false;
+
+            if(gamepad1.dpad_down)
+            {
+                if(!down)
+                {
+                    if(mode == 0)   r = Math.max(0, r - 10);
+                    if(mode == 1)   g = Math.max(0, g - 10);
+                    if(mode == 2)   b = Math.max(0, b - 10);
+                    down = true;
+                }
+            }
+            else    down = false;
+
+            rgb.setColor(r, g, b);
+
+            rgb.logInformation();
+            telemetry.update();
+        }
+    }
+}
