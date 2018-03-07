@@ -251,7 +251,7 @@ public class AutonomousMiddle extends LinearOpMode {
             nrTelemetry.setValue(nr);
             gyroTelemetry.setValue(gyro.getHeading());
             telemetry.update();
-
+            sleep(200);
             if( !opModeIsActive() ) return;
         }
 
