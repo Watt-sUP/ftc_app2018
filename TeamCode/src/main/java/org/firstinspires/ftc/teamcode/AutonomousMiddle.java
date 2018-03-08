@@ -148,7 +148,7 @@ public class AutonomousMiddle extends LinearOpMode {
         getDown();
         if(!opModeIsActive())   return;
 
-
+        /*
         /// Go in front of first drawer
         state.setValue("go to drawer");
         telemetry.update();
@@ -205,9 +205,9 @@ public class AutonomousMiddle extends LinearOpMode {
     {
         Acceleration acc = compass.getAcceleration();
 
-        double X = acc.xAccel * 1000.0;
-        double Y = acc.yAccel * 1000.0;
-        double Z = acc.zAccel * 1000.0;
+        double X = acc.xAccel;
+        double Y = acc.yAccel;
+        double Z = acc.zAccel;
 
         double Xg, Yg, Zg;
         Xg = X;
@@ -225,10 +225,13 @@ public class AutonomousMiddle extends LinearOpMode {
     protected void getDown()
     {
         double power = 0.3;
+        double lastDif = 0.0;
         double heading = getPitch();
-        double okDegrees = 1.0;
-        rnr.setPower(-power * forward, power * forward);
-        sleep(300);
+        double deg1 = 3.0;
+        double okDegrees = 1;
+        //rnr.setPower(-power * forward, power * forward);
+
+        int step = 0;
 
         while( true )
         {
@@ -237,11 +240,32 @@ public class AutonomousMiddle extends LinearOpMode {
             telemetry.update();
 
             double dif = heading - currentHeading;
-            if(dif <= okDegrees)
+
+            if(step == 0)
             {
-                rnr.setPower(0.0, 0.0);
-                break;
+                if(dif >= deg1)  step++;
+                rnr.setPower(-power, power);
             }
+            else
+            {
+                if(dif <= okDegrees)
+                {
+                    rnr.setPower(0.0, 0.0);
+                    break;
+                }
+
+                if(lastDif < dif)
+                {
+                    rnr.setPower(-power, power);
+                }
+                else
+                {
+                    double pw = power * dif * 0.12;
+                    rnr.setPower(-pw, pw);
+                }
+            }
+
+            lastDif = dif;
 
             if(!opModeIsActive())   return;
         }

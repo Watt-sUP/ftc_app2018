@@ -56,6 +56,11 @@ public class SensorMRCompass extends LinearOpMode {
     ModernRoboticsI2cCompassSensor compass;
     ElapsedTime                    timer = new ElapsedTime();
 
+    private double fXg = 0;
+    private double fYg = 0;
+    private double fZg = 0;
+    private double alpha = 0.5;
+
     @Override public void runOpMode() {
 
         // get a reference to our compass
@@ -128,6 +133,8 @@ public class SensorMRCompass extends LinearOpMode {
 
         } else {
 
+            telemetry.addData("Pitch", getPitch());
+
             // getDirection() returns a traditional compass heading in the range [0,360),
             // with values increasing in a CW direction
             telemetry.addData("heading", "%.1f", compass.getDirection());
@@ -148,5 +155,26 @@ public class SensorMRCompass extends LinearOpMode {
         telemetry.addData("command", "%s", compass.readCommand());
 
         telemetry.update();
+    }
+
+    private double getPitch()
+    {
+        Acceleration acc = compass.getAcceleration();
+
+        double X = acc.xAccel;
+        double Y = acc.yAccel;
+        double Z = acc.zAccel;
+
+        double Xg, Yg, Zg;
+        Xg = X;
+        Yg = Y;
+        Zg = Z;
+
+        fXg = Xg * alpha + (fXg * (1.0 - alpha));
+        fYg = Yg * alpha + (fYg * (1.0 - alpha));
+        fZg = Zg * alpha + (fZg * (1.0 - alpha));
+
+        double pitch = ( Math.atan2(-fXg, Math.sqrt(fYg * fYg + fZg * fZg)) * 180.0 ) / Math.PI;
+        return pitch;
     }
 }
