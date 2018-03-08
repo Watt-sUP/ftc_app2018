@@ -1,5 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.support.annotation.Keep;
+
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cColorSensor;
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cCompassSensor;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -32,7 +36,8 @@ public class AutonomousMiddle extends LinearOpMode {
     /// Sensors
     protected ModernRoboticsI2cGyro gyro;
     protected ModernRoboticsI2cRangeSensor dist_r;
-    protected ColorSensor colorSensor;
+    protected ModernRoboticsI2cCompassSensor compass;
+    protected ModernRoboticsI2cColorSensor colorSensor;
 
     /// Variables
     protected static int forward = 0;
@@ -42,11 +47,12 @@ public class AutonomousMiddle extends LinearOpMode {
     protected VuforiaLocalizer vuforia;
 
     /// Telemetry
-    Telemetry.Item gyroTelemetry, rangeTelemetry, nrTelemetry;
+    Telemetry.Item gyroTelemetry, rangeTelemetry, nrTelemetry, compassTelemetry;
     Telemetry.Item lft, rgt;
 
     @Override
     public void runOpMode() {
+
         /// Initialize objects
         telemetry.setAutoClear(false);
 
@@ -87,6 +93,9 @@ public class AutonomousMiddle extends LinearOpMode {
 
         dist_r = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "distr");
 
+        compassTelemetry = telemetry.addData("Compass", "init");
+        compass = hardwareMap.get(ModernRoboticsI2cCompassSensor.class, "compass");
+
         telemetry.update();
 
         Telemetry.Item colorTelemtry = telemetry.addData("Color", 0);
@@ -125,6 +134,7 @@ public class AutonomousMiddle extends LinearOpMode {
         getDown();
         if(!opModeIsActive())   return;
 
+        /*
         /// Go in front of first drawer
         state.setValue("go to drawer");
         telemetry.update();
@@ -133,7 +143,7 @@ public class AutonomousMiddle extends LinearOpMode {
 
         /// TODO: Go to needed drawer
 
-        /*
+
         /// Rotate 90 degrees
         state.setValue("rotate");
         telemetry.update();
@@ -180,7 +190,26 @@ public class AutonomousMiddle extends LinearOpMode {
     protected void getDown()
     {
         double power = 0.2;
+        double heading = compass.getDirection();
+        double okDegrees = 1.0;
+        rnr.setPower(-power * forward, power * forward);
+        sleep(500);
 
+        while( true )
+        {
+            double currentHeading = compass.getDirection();
+            compassTelemetry.setValue(currentHeading);
+            telemetry.update();
+
+            double dif = Math.min(Math.abs(currentHeading - heading), Math.abs(heading + 360.0 - currentHeading));
+            if(dif <= okDegrees)
+            {
+                rnr.setPower(0.0, 0.0);
+                break;
+            }
+        }
+
+        Keep_Orientation(0);
     }
 
     protected void Keep_Orientation(int Optimal_pos)
