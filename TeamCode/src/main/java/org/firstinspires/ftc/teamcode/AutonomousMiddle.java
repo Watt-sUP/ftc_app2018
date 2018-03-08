@@ -125,6 +125,7 @@ public class AutonomousMiddle extends LinearOpMode {
         go_to_drawer(drawer);
         if( !opModeIsActive() ) return;
 
+        /*
         /// Rotate 90 degrees
         state.setValue("rotate");
         telemetry.update();
@@ -136,6 +137,7 @@ public class AutonomousMiddle extends LinearOpMode {
         telemetry.update();
         //place_cube();
         if( !opModeIsActive() ) return;
+        */
 
         /// TODO: get more cubes
     }
@@ -220,7 +222,7 @@ public class AutonomousMiddle extends LinearOpMode {
 
     protected void go_to_drawer (int drawer_target_pos )
     {
-        double initPower = 0.4;
+        double initPower = 0.6;
 
         int orientation = gyro.getHeading();
         rnr.setPower(-1,1, initPower * forward);
@@ -236,12 +238,11 @@ public class AutonomousMiddle extends LinearOpMode {
 
         while ( nr < drawer_target_pos )
         {
-
+            //Keep_Orientation(orientation);
             double dist = dist_r.getDistance(DistanceUnit.CM);
-            if( last_dist - dist >= 6 )
+            if( last_dist - dist >= 5 )
                 nr ++;
             last_dist = dist;
-            Keep_Orientation(orientation);
             if(nr < 1)
                 rnr.setPower(-1,1, initPower * forward);
             else
