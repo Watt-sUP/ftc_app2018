@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import android.support.annotation.Keep;
 
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsAnalogOpticalDistanceSensor;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cColorSensor;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cCompassSensor;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
@@ -38,6 +39,7 @@ public class AutonomousMiddle extends LinearOpMode {
     protected ModernRoboticsI2cRangeSensor dist_r;
     protected ModernRoboticsI2cCompassSensor compass;
     protected ModernRoboticsI2cColorSensor colorSensor;
+    protected ModernRoboticsAnalogOpticalDistanceSensor ods;
 
     /// Variables
     protected static int forward = 0;
@@ -81,6 +83,7 @@ public class AutonomousMiddle extends LinearOpMode {
 
         gyroTelemetry = telemetry.addData("Gyro", "Not initialized");
         gyro = hardwareMap.get(ModernRoboticsI2cGyro.class, "gyro");
+        ods=hardwareMap.get(ModernRoboticsAnalogOpticalDistanceSensor.class,"ods");
         gyroTelemetry.setValue("Calibrating...");
         gyro.calibrate();
         while (!isStopRequested() && gyro.isCalibrating()) {
@@ -127,7 +130,7 @@ public class AutonomousMiddle extends LinearOpMode {
         if (!opModeIsActive()) return;
 
         /// TODO: get color and score jewels
-
+        getDown2();
         /// Get down from platform
         state.setValue("get down from platform");
         telemetry.update();
@@ -211,6 +214,19 @@ public class AutonomousMiddle extends LinearOpMode {
 
         Keep_Orientation(0);
     }
+    protected void getDown2()
+    {
+        double power =0.2;
+
+
+        while(ods.getRawLightDetected()>0.9);
+        rnr.setPower( -power , power );
+
+        rnr.setPower(0.0,0.0);
+
+
+    }
+
 
     protected void Keep_Orientation(int Optimal_pos)
     {
