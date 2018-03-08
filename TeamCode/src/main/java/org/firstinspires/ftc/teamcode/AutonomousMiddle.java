@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.CompassSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -89,17 +90,19 @@ public class AutonomousMiddle extends LinearOpMode {
             sleep(50);
         }
         gyroTelemetry.setValue("Calibrated!");
-        telemetry.update();
 
         dist_r = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "distr");
 
-        compassTelemetry = telemetry.addData("Compass", "init");
         compass = hardwareMap.get(ModernRoboticsI2cCompassSensor.class, "compass");
-
-        telemetry.update();
+        compass.setMode(CompassSensor.CompassMode.CALIBRATION_MODE);
+        sleep(200);
+        compass.setMode(CompassSensor.CompassMode.MEASUREMENT_MODE);
+        compassTelemetry = telemetry.addData("Compass", compass.getDirection());
 
         Telemetry.Item colorTelemtry = telemetry.addData("Color", 0);
         //colorSensor = hardwareMap.get(ColorSensor.class, "color");
+
+        telemetry.update();
 
         //if( !opModeIsActive() ) return;
 
@@ -189,15 +192,16 @@ public class AutonomousMiddle extends LinearOpMode {
 
     protected void getDown()
     {
-        double power = 0.2;
+        double power = 0.3;
         double heading = compass.getDirection();
-        double okDegrees = 1.0;
+        double okDegrees = 0.5;
         rnr.setPower(-power * forward, power * forward);
         sleep(500);
 
         while( true )
         {
-            double currentHeading = compass.getDirection();
+            double currentHeading = 0.0;
+            currentHeading = compass.getDirection();
             compassTelemetry.setValue(currentHeading);
             telemetry.update();
 
@@ -207,6 +211,8 @@ public class AutonomousMiddle extends LinearOpMode {
                 rnr.setPower(0.0, 0.0);
                 break;
             }
+
+            if(!opModeIsActive())   return;
         }
 
         Keep_Orientation(0);
@@ -230,10 +236,6 @@ public class AutonomousMiddle extends LinearOpMode {
             int right = 0;
             if (Optimal_pos > heading) right = -Optimal_pos + heading + 360;
             else right = -Optimal_pos + heading;
-
-            lft.setValue(left);
-            rgt.setValue(right);
-            telemetry.update();
 
             if( Math.min(left, right) <= okDegrees ) return;
 
