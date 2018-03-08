@@ -141,14 +141,14 @@ public class AutonomousMiddle extends LinearOpMode {
         if (!opModeIsActive()) return;
 
         /// TODO: get color and score jewels
-        //getDown2();
+
         /// Get down from platform
         state.setValue("get down from platform");
         telemetry.update();
         getDown();
         if(!opModeIsActive())   return;
 
-        /*
+
         /// Go in front of first drawer
         state.setValue("go to drawer");
         telemetry.update();
@@ -157,7 +157,7 @@ public class AutonomousMiddle extends LinearOpMode {
 
         /// TODO: Go to needed drawer
 
-
+        /*
         /// Rotate 90 degrees
         state.setValue("rotate");
         telemetry.update();
@@ -226,18 +226,17 @@ public class AutonomousMiddle extends LinearOpMode {
     {
         double power = 0.3;
         double heading = getPitch();
-        double okDegrees = -1;
-        //rnr.setPower(-power * forward, power * forward);
-        //sleep(500);
+        double okDegrees = 1.0;
+        rnr.setPower(-power * forward, power * forward);
+        sleep(300);
 
         while( true )
         {
-            double currentHeading = 0.0;
-            currentHeading = getPitch();
+            double currentHeading = getPitch();
             compassTelemetry.setValue(currentHeading);
             telemetry.update();
 
-            double dif = Math.min(Math.abs(currentHeading - heading), Math.abs(heading + 360.0 - currentHeading));
+            double dif = heading - currentHeading;
             if(dif <= okDegrees)
             {
                 rnr.setPower(0.0, 0.0);
@@ -248,24 +247,6 @@ public class AutonomousMiddle extends LinearOpMode {
         }
 
         Keep_Orientation(0);
-    }
-    protected void getDown2()
-    {
-        double power = 0.2;
-
-
-        while(true)
-        {
-            if(false)   break;
-            odsTelemetry.setValue(ods.getRawLightDetected());
-            telemetry.update();
-            if(!opModeIsActive())   return;
-            //rnr.setPower( -power , power );
-        }
-
-        rnr.setPower(0.0,0.0);
-
-
     }
 
 
