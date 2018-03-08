@@ -77,7 +77,7 @@ public class AutonomousMiddle extends LinearOpMode {
         gyro = hardwareMap.get(ModernRoboticsI2cGyro.class, "gyro");
         gyroTelemetry.setValue("Calibrating...");
         gyro.calibrate();
-        while (!isStopRequested() && gyro.isCalibrating())  {
+        while (!isStopRequested() && gyro.isCalibrating()) {
             gyroTelemetry.setValue("Calibrating...");
             telemetry.update();
             sleep(50);
@@ -108,23 +108,32 @@ public class AutonomousMiddle extends LinearOpMode {
         state.setValue("grab cube");
         telemetry.update();
         grab_cube();
-        if( !opModeIsActive() ) return;
+        if (!opModeIsActive()) return;
 
         /// Gets key drawer
         state.setValue("get key drawer");
         telemetry.update();
         int drawer = getKeyDrawer();
-        if(forward == 1)    drawer = 4 - drawer;
-        if( !opModeIsActive() ) return;
+        if (forward == 1) drawer = 4 - drawer;
+        if (!opModeIsActive()) return;
 
         /// TODO: get color and score jewels
 
-        /// Go in front of drawer
+        /// Get down from platform
+        state.setValue("get down from platform");
+        telemetry.update();
+        getDown();
+        if(!opModeIsActive())   return;
+
+        /// Go in front of first drawer
         state.setValue("go to drawer");
         telemetry.update();
-        go_to_drawer(drawer);
-        if( !opModeIsActive() ) return;
+        go_to_drawer();
+        if (!opModeIsActive()) return;
 
+        /// TODO: Go to needed drawer
+
+        /*
         /// Rotate 90 degrees
         state.setValue("rotate");
         telemetry.update();
@@ -136,6 +145,7 @@ public class AutonomousMiddle extends LinearOpMode {
         telemetry.update();
         //place_cube();
         if( !opModeIsActive() ) return;
+        */
 
         /// TODO: get more cubes
     }
@@ -146,12 +156,10 @@ public class AutonomousMiddle extends LinearOpMode {
      * CENTER = 2
      * RIGHT = 3
      * UNKNOWN = 2
-     * @return  key drawer
+     *
+     * @return key drawer
      */
-    protected int getKeyDrawer()
-    {
-        if(true)   return 1;
-
+    protected int getKeyDrawer() {
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
         parameters.vuforiaLicenseKey = "AT4pxIn/////AAAAGSL31MQ2OkEAlE8fAGFaXLprsCGiwn5e81ZDhALBFUMK45pVGTrKvkFV9ZBC8LGo2fubVHcyc2JBpk2bsXVf/0zESirRkEkFjIItegiTFBB6wwQeeBcANTIZAFH1EjAo6QDGxlMTyhJ6JJQmrm2yBPFJFpfWDus1E34IVIyLHc8V/iCSTuegaorAlk1MXV7r2jog5G5rwsWhfD6CDx2E85s1cD20eEC4XQqx2pgcbG0CB1ohiPIYG0jtj373VY8gn9PfX2YJDBe/sLAx4IbxQxvtpgL5PAhAFcTdPfYAi6GmUzLbWQDITzao3dFlxiJjRA8fklV5KsBKJFj6viP+m3HybrTgW6kR+VOFbU2J2wD8";
@@ -163,26 +171,17 @@ public class AutonomousMiddle extends LinearOpMode {
         relicTrackables.activate();
         RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
 
-        if(vuMark == RelicRecoveryVuMark.LEFT)  return 1;
-        if(vuMark == RelicRecoveryVuMark.CENTER)    return 2;
-        if(vuMark == RelicRecoveryVuMark.RIGHT) return 3;
+        if (vuMark == RelicRecoveryVuMark.LEFT) return 1;
+        if (vuMark == RelicRecoveryVuMark.CENTER) return 2;
+        if (vuMark == RelicRecoveryVuMark.RIGHT) return 3;
         return 2;
     }
 
-    /*protected void  Keep_Orientation  (int Optimal_pos ){
-        while( !(Optimal_pos - 3 <= gyro.getHeading() && gyro.getHeading() <= Optimal_pos + 3) ) {
-            gyroTelemetry.setValue(gyro.getHeading());
-            telemetry.update();
-            // test to rotate to the smaller angle
-            //ratio
-            //ToDo: test if  rotation constant is big enough for rotation to be made when Optimal_pos-gyro.getHeading is small, try a bigger/smaller constant
-            if (Optimal_pos - gyro.getHeading() < 0)
-                rnr.setPower((Optimal_pos - gyro.getHeading()) * 0.04, -(Optimal_pos - gyro.getHeading()) * 0.04);//proportional rotation
-            else if (Optimal_pos - gyro.getHeading() > 0)
-                rnr.setPower((Optimal_pos - gyro.getHeading()) * 0.04, -(Optimal_pos - gyro.getHeading()) * 0.04);//proportional rotation
-        }
-    }*/
+    protected void getDown()
+    {
+        double power = 0.2;
 
+    }
 
     protected void Keep_Orientation(int Optimal_pos)
     {
@@ -218,9 +217,9 @@ public class AutonomousMiddle extends LinearOpMode {
         }
     }
 
-    protected void go_to_drawer (int drawer_target_pos )
+    protected void go_to_drawer ()
     {
-        double initPower = 0.4;
+        double initPower = 0.6;
 
         int orientation = gyro.getHeading();
         rnr.setPower(-1,1, initPower * forward);
@@ -234,18 +233,14 @@ public class AutonomousMiddle extends LinearOpMode {
         rgt = telemetry.addData("Right", -1);
         telemetry.update();
 
-        while ( nr < drawer_target_pos )
+        while ( nr < 1 )
         {
-
+            //Keep_Orientation(orientation);
             double dist = dist_r.getDistance(DistanceUnit.CM);
-            if( last_dist - dist >= 6 )
+            if( last_dist - dist >= 5 )
                 nr ++;
             last_dist = dist;
-            Keep_Orientation(orientation);
-            if(nr < 1)
-                rnr.setPower(-1,1, initPower * forward);
-            else
-                rnr.setPower(-1, 1, initPower * 0.25 * forward);
+            rnr.setPower(-1,1, initPower * forward);
 
             rangeTelemetry.setValue( String.format("%.3f", dist));
             nrTelemetry.setValue(nr);
