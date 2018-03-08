@@ -33,6 +33,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -53,6 +54,7 @@ public class RGB_Test extends LinearOpMode {
                             hardwareMap.get(DcMotor.class, "red"),
                             hardwareMap.get(DcMotor.class, "green"),
                             hardwareMap.get(DcMotor.class, "blue"),
+                            hardwareMap.get(VoltageSensor.class, "voltage"),
                             rgbTelemetry);
 
         waitForStart();

@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -11,18 +12,18 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class RGBStrip
 {
     private DcMotor plus, red, green, blue;
-
+    private VoltageSensor voltage_sensor;
     private Telemetry.Item telemetry;
     private boolean verbose = false;
 
-    RGBStrip(DcMotor _plus, DcMotor _red, DcMotor _green, DcMotor _blue, Object... _telemetry)
+    RGBStrip(DcMotor _plus, DcMotor _red, DcMotor _green, DcMotor _blue, VoltageSensor voltage, Object... _telemetry)
     {
         plus = _plus; red = _red; green = _green; blue = _blue;
         plus.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         red.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         green.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         blue.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
+        voltage_sensor=voltage;
         if(_telemetry.length > 0 && (_telemetry[0] instanceof Telemetry.Item))
         {
             verbose = true;
@@ -42,7 +43,7 @@ public class RGBStrip
 
     public void setColor(int r, int g, int b)
     {
-        if(r == 0 && g == 0 && b == 0)
+        if(r == 0 && g == 0 && b == 0 || voltage_sensor.getVoltage()<11.0)
         {
             off();
             return;
