@@ -72,6 +72,10 @@ public class SensorMRCompass extends LinearOpMode {
         telemetry.log().add("compass in a full 360 degree circle while keeping");
         telemetry.log().add("it level. When complete, press 'B'.");
 
+        compass.setMode(CompassSensor.CompassMode.CALIBRATION_MODE);
+        sleep(200);
+        compass.setMode(CompassSensor.CompassMode.MEASUREMENT_MODE);
+
         // wait for the start button to be pressed
         waitForStart();
         telemetry.log().clear();
