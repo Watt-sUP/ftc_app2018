@@ -20,6 +20,7 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
@@ -49,8 +50,14 @@ public class AutonomousMiddle extends LinearOpMode {
     /// Vuforia
     protected VuforiaLocalizer vuforia;
 
+    /// Compass + Accelerometer
+    protected double fXg = 0;
+    protected double fYg = 0;
+    protected double fZg = 0;
+    protected double alpha = 0.5;
+
     /// Telemetry
-    Telemetry.Item gyroTelemetry, rangeTelemetry, nrTelemetry, compassTelemetry;
+    Telemetry.Item gyroTelemetry, rangeTelemetry, nrTelemetry, compassTelemetry, odsTelemetry;
     Telemetry.Item lft, rgt;
 
     @Override
@@ -97,16 +104,17 @@ public class AutonomousMiddle extends LinearOpMode {
         dist_r = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "distr");
 
         compass = hardwareMap.get(ModernRoboticsI2cCompassSensor.class, "compass");
-        compass.setMode(CompassSensor.CompassMode.CALIBRATION_MODE);
-        sleep(200);
+        //compass.setMode(CompassSensor.CompassMode.CALIBRATION_MODE);
+        //sleep(200);
         compass.setMode(CompassSensor.CompassMode.MEASUREMENT_MODE);
-        compassTelemetry = telemetry.addData("Compass", compass.getDirection());
+        compassTelemetry = telemetry.addData("Compass", "init");
 
         Telemetry.Item colorTelemtry = telemetry.addData("Color", 0);
         //colorSensor = hardwareMap.get(ColorSensor.class, "color");
 
+        odsTelemetry = telemetry.addData("ODS", "init");
         telemetry.update();
-
+        ods.enableLed(true);
         //if( !opModeIsActive() ) return;
 
         waitForStart();
@@ -133,7 +141,7 @@ public class AutonomousMiddle extends LinearOpMode {
         if (!opModeIsActive()) return;
 
         /// TODO: get color and score jewels
-        getDown2();
+        //getDown2();
         /// Get down from platform
         state.setValue("get down from platform");
         telemetry.update();
@@ -193,18 +201,39 @@ public class AutonomousMiddle extends LinearOpMode {
         return 2;
     }
 
+    protected double getPitch()
+    {
+        Acceleration acc = compass.getAcceleration();
+
+        double X = acc.xAccel * 1000.0;
+        double Y = acc.yAccel * 1000.0;
+        double Z = acc.zAccel * 1000.0;
+
+        double Xg, Yg, Zg;
+        Xg = X;
+        Yg = Y;
+        Zg = Z;
+
+        fXg = Xg * alpha + (fXg * (1.0 - alpha));
+        fYg = Yg * alpha + (fYg * (1.0 - alpha));
+        fZg = Zg * alpha + (fZg * (1.0 - alpha));
+
+        double pitch = ( Math.atan2(-fXg, Math.sqrt(fYg * fYg + fZg * fZg)) * 180.0 ) / Math.PI;
+        return pitch;
+    }
+
     protected void getDown()
     {
         double power = 0.3;
-        double heading = compass.getDirection();
-        double okDegrees = 0.5;
-        rnr.setPower(-power * forward, power * forward);
-        sleep(500);
+        double heading = getPitch();
+        double okDegrees = -1;
+        //rnr.setPower(-power * forward, power * forward);
+        //sleep(500);
 
         while( true )
         {
             double currentHeading = 0.0;
-            currentHeading = compass.getDirection();
+            currentHeading = getPitch();
             compassTelemetry.setValue(currentHeading);
             telemetry.update();
 
@@ -222,11 +251,17 @@ public class AutonomousMiddle extends LinearOpMode {
     }
     protected void getDown2()
     {
-        double power =0.2;
+        double power = 0.2;
 
 
-        while(ods.getRawLightDetected()>0.9);
-        rnr.setPower( -power , power );
+        while(true)
+        {
+            if(false)   break;
+            odsTelemetry.setValue(ods.getRawLightDetected());
+            telemetry.update();
+            if(!opModeIsActive())   return;
+            //rnr.setPower( -power , power );
+        }
 
         rnr.setPower(0.0,0.0);
 
