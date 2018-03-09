@@ -178,7 +178,7 @@ public class Runner {
         power = Math.abs(power);
         setPower(power, power);
 
-        while( leftF.isBusy()||rightF.isBusy()||leftB.isBusy()||rightB.isBusy());
+        while( leftF.isBusy()&&rightF.isBusy()&&leftB.isBusy()&&rightB.isBusy());
 
         setPower(0.0, 0.0);
 

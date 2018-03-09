@@ -99,7 +99,7 @@ public class DriverControl extends LinearOpMode
 
             /// Telemetry
             timeTelemetry.setValue(runtime.toString());
-            runner.logInformation("Power2");
+            runner.logInformation("Position");
             collector.logInformation("Positions");
             telemetry.update();
         }

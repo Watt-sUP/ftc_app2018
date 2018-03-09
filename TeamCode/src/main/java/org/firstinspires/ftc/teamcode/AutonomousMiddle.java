@@ -14,7 +14,9 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.CompassSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -38,10 +40,9 @@ public class AutonomousMiddle extends LinearOpMode {
 
     /// Sensors
     protected ModernRoboticsI2cGyro gyro;
-    protected ModernRoboticsI2cRangeSensor dist_r;
+    protected ModernRoboticsI2cRangeSensor dist_r,dist_f;
     protected ModernRoboticsI2cCompassSensor compass;
     protected ModernRoboticsI2cColorSensor colorSensor;
-    protected ModernRoboticsAnalogOpticalDistanceSensor ods;
 
     /// Servo
     protected Servo extender, rotor;
@@ -96,7 +97,6 @@ public class AutonomousMiddle extends LinearOpMode {
 
         gyroTelemetry = telemetry.addData("Gyro", "Not initialized");
         gyro = hardwareMap.get(ModernRoboticsI2cGyro.class, "gyro");
-        ods=hardwareMap.get(ModernRoboticsAnalogOpticalDistanceSensor.class,"ods");
         gyroTelemetry.setValue("Calibrating...");
         gyro.calibrate();
         while (!isStopRequested() && gyro.isCalibrating()) {
@@ -106,6 +106,7 @@ public class AutonomousMiddle extends LinearOpMode {
         }
         gyroTelemetry.setValue("Calibrated!");
 
+        dist_f = null;
         dist_r = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "distr");
 
         compass = hardwareMap.get(ModernRoboticsI2cCompassSensor.class, "compass");
@@ -117,9 +118,6 @@ public class AutonomousMiddle extends LinearOpMode {
         Telemetry.Item colorTelemtry = telemetry.addData("Color", 0);
         //colorSensor = hardwareMap.get(ColorSensor.class, "color");
 
-        odsTelemetry = telemetry.addData("ODS", "init");
-        telemetry.update();
-        ods.enableLed(true);
         //if( !opModeIsActive() ) return;
 
         waitForStart();
@@ -168,20 +166,21 @@ public class AutonomousMiddle extends LinearOpMode {
         /// TODO: Go to needed drawer
        state.setValue("go to needed drawer");
         telemetry.update();
-        pick_drawer(3);
-        /*
+        pick_drawer(2);
+
         /// Rotate 90 degrees
         state.setValue("rotate");
         telemetry.update();
         Keep_Orientation(270);
         if( !opModeIsActive() ) return;
 
+
         /// Place cube
         state.setValue("place cube");
         telemetry.update();
-        //place_cube();
+        place_cube();
         if( !opModeIsActive() ) return;
-        */
+
 
         /// TODO: get more cubes
     }
@@ -375,14 +374,14 @@ public class AutonomousMiddle extends LinearOpMode {
         //rnr.distanceMove(10 * forward, 0.4);
     }
 
-    protected void place_cube()
+    /*protected void place_cube()
     {
         //places cube inside drawer
         rnr.distanceMove(15, 0.6);
 
         //drops the cube
         collector.openArms(3);
-    }
+    }*/
 
     protected void grab_cube()
     {
@@ -393,28 +392,35 @@ public class AutonomousMiddle extends LinearOpMode {
     }
     protected void pick_drawer(int nr) {
         if (nr == 1)
-            rnr.distanceMove(10, 0.3);
+            rnr.distanceMove(7.5, 0.3);
         if (nr == 2)
-            rnr.distanceMove(30, 0.4);
+            rnr.distanceMove(22.5, 0.3);
         if (nr == 3)
-            rnr.distanceMove(50, 0.5);
+            rnr.distanceMove(37.5, 0.3);
         if( !opModeIsActive() ) return;
 
     }
-   /* private void place_cube()
+   private void place_cube()
     {
+        dist_r = null;
+        dist_f = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "distf");
         double pw;
         while(true)
         {
-            pw=( dist_f-8 )*( 1 / 22 );
+            double dist = dist_f.getDistance(DistanceUnit.CM);
+            rangeTelemetry.setValue(dist);
+            telemetry.update();
+            pw=( dist - 8 )*( 1 / 22 );
                 rnr.setPower(-pw,pw);
                 if( pw <= 0.05 && pw >= 0.0 )
                 {
-                    break;
                     rnr.setPower(0.0,0.0);
+                    //break;
+
                 }
+            if(false)   break;
         }
         collector.openArms(3);
         if (!opModeIsActive()) return;
-    }*/
+    }
 }
