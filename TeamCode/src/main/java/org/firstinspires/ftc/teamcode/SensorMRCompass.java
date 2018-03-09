@@ -59,7 +59,7 @@ public class SensorMRCompass extends LinearOpMode {
     private double fXg = 0;
     private double fYg = 0;
     private double fZg = 0;
-    private double alpha = 0.9;
+    private double minn, maxx;
 
     @Override public void runOpMode() {
 
@@ -84,6 +84,8 @@ public class SensorMRCompass extends LinearOpMode {
         // wait for the start button to be pressed
         waitForStart();
         telemetry.log().clear();
+
+        minn = 90; maxx = 0;
 
         while (opModeIsActive()) {
 
@@ -133,7 +135,14 @@ public class SensorMRCompass extends LinearOpMode {
 
         } else {
 
-            telemetry.addData("Pitch", getPitch());
+            double pitch = getPitch();
+            minn = Math.min(minn, pitch);
+            maxx = Math.max(maxx, pitch);
+            double dif = maxx - minn;
+            telemetry.addData("Pitch", pitch);
+            telemetry.addData("MAX", maxx);
+            telemetry.addData("MIN", minn);
+            telemetry.addData("Difference", dif);
 
             // getDirection() returns a traditional compass heading in the range [0,360),
             // with values increasing in a CW direction
@@ -159,6 +168,8 @@ public class SensorMRCompass extends LinearOpMode {
 
     private double getPitch()
     {
+        double alpha = 0.54;
+
         Acceleration acc = compass.getAcceleration();
 
         double X = acc.xAccel;

@@ -57,7 +57,6 @@ public class AutonomousMiddle extends LinearOpMode {
     protected double fXg = 0;
     protected double fYg = 0;
     protected double fZg = 0;
-    protected double alpha = 0.5;
 
     /// Telemetry
     Telemetry.Item gyroTelemetry, rangeTelemetry, nrTelemetry, compassTelemetry, odsTelemetry;
@@ -92,8 +91,8 @@ public class AutonomousMiddle extends LinearOpMode {
                 collectorTelemetry
         );
 
-        extender = hardwareMap.get(Servo.class, "extender");
-        rotor = hardwareMap.get(Servo.class, "rotor");
+        //extender = hardwareMap.get(Servo.class, "extender");
+        //rotor = hardwareMap.get(Servo.class, "rotor");
 
         gyroTelemetry = telemetry.addData("Gyro", "Not initialized");
         gyro = hardwareMap.get(ModernRoboticsI2cGyro.class, "gyro");
@@ -149,7 +148,7 @@ public class AutonomousMiddle extends LinearOpMode {
         /// TODO: get color and score jewels
         state.setValue("score jewels");
         telemetry.update();
-        scoreJewels();
+        //scoreJewels();
         if(!opModeIsActive())   return;
 
         /// Get down from platform
@@ -230,6 +229,7 @@ public class AutonomousMiddle extends LinearOpMode {
 
     protected double getPitch()
     {
+        double alpha = 0.5;
         Acceleration acc = compass.getAcceleration();
 
         double X = acc.xAccel;
