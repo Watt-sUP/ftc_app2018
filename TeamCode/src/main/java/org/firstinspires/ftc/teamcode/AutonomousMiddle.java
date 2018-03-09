@@ -29,6 +29,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
+import java.security.KeyPair;
+
 @Autonomous(name="Autonomous Middle", group="Linear Opmode")
 @Disabled
 public class AutonomousMiddle extends LinearOpMode {
@@ -50,7 +52,7 @@ public class AutonomousMiddle extends LinearOpMode {
     /// Variables
     protected static int forward = 0;
     protected static int color = 0;    /// Red = 0, Blue = 1
-
+    int nr=0;
     /// Vuforia
     protected VuforiaLocalizer vuforia;
 
@@ -131,6 +133,7 @@ public class AutonomousMiddle extends LinearOpMode {
 
         /// Grab cube
 
+
         state.setValue("grab cube");
         telemetry.update();
         grab_cube();
@@ -149,14 +152,14 @@ public class AutonomousMiddle extends LinearOpMode {
         telemetry.update();
         //scoreJewels();
         if(!opModeIsActive())   return;
-
+*/
         /// Get down from platform
         state.setValue("get down from platform");
         telemetry.update();
         getDown();
         if(!opModeIsActive())   return;
 
-*/
+
         /// Go in front of first drawer
         state.setValue("go to drawer");
         telemetry.update();
@@ -261,15 +264,20 @@ public class AutonomousMiddle extends LinearOpMode {
         double deg1 = 3.0;
         double okDegrees = 1;
         //rnr.setPower(-power * forward, power * forward);
-
+        double last_dist = dist_r.getDistance(DistanceUnit.CM);
         int step = 0;
 
-        while( true )
+        double initPower = 0.2;
+        while( nr==0)
         {
-            double currentHeading = getPitch();
-            compassTelemetry.setValue(currentHeading);
-            telemetry.update();
 
+            double currentHeading = getPitch();
+            //compassTelemetry.setValue(currentHeading);
+            //telemetry.update();
+            double dist = dist_r.getDistance(DistanceUnit.CM);
+
+            last_dist = dist;
+            //sleep(200);
             double dif = heading - currentHeading;
 
             if(step == 0)
@@ -282,6 +290,7 @@ public class AutonomousMiddle extends LinearOpMode {
                 if(dif <= okDegrees)
                 {
                     rnr.setPower(0.0, 0.0);
+                    Keep_Orientation(0);
                     break;
                 }
 
@@ -291,6 +300,8 @@ public class AutonomousMiddle extends LinearOpMode {
                 }
                 else
                 {
+                    if( last_dist - dist >=7 )
+                        nr ++;
                     double pw = power * dif * 0.12;
                     rnr.setPower(-pw, pw);
                 }
@@ -342,7 +353,7 @@ public class AutonomousMiddle extends LinearOpMode {
         int orientation = gyro.getHeading();
         rnr.setPower(-1,1, initPower * forward);
 
-        int nr = 0;
+
         double last_dist = dist_r.getDistance(DistanceUnit.CM);
 
         rangeTelemetry = telemetry.addData("Range", String.format("%.3f", last_dist));
@@ -404,22 +415,13 @@ public class AutonomousMiddle extends LinearOpMode {
     {
         dist_r = null;
         dist_f = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "distf");
-        double pw;
-        while(true)
+        double pw=0.3;
+        while(dist_f.getDistance(DistanceUnit.CM)>=23)
         {
-            double dist = dist_f.getDistance(DistanceUnit.CM);
-            rangeTelemetry.setValue(dist);
-            telemetry.update();
-            pw=( dist - 8 )*( 1 / 22 );
-                rnr.setPower(-pw,pw);
-                if( pw <= 0.05 && pw >= 0.0 )
-                {
-                    rnr.setPower(0.0,0.0);
-                    //break;
+            rnr.setPower(-pw,pw);
 
-                }
-            if(false)   break;
         }
+        rnr.setPower(0.0,0.0);
         collector.openArms(3);
         if (!opModeIsActive()) return;
     }
