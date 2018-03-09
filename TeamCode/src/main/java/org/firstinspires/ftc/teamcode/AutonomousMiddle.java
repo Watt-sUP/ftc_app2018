@@ -141,6 +141,7 @@ public class AutonomousMiddle extends LinearOpMode {
         /// Gets key drawer
         state.setValue("get key drawer");
         telemetry.update();
+        /*
         int drawer = getKeyDrawer();
         if (forward == 1) drawer = 4 - drawer;
         if (!opModeIsActive()) return;
@@ -157,7 +158,7 @@ public class AutonomousMiddle extends LinearOpMode {
         getDown();
         if(!opModeIsActive())   return;
 
-        /*
+*/
         /// Go in front of first drawer
         state.setValue("go to drawer");
         telemetry.update();
@@ -165,7 +166,9 @@ public class AutonomousMiddle extends LinearOpMode {
         if (!opModeIsActive()) return;
 
         /// TODO: Go to needed drawer
-
+       state.setValue("go to needed drawer");
+        telemetry.update();
+        pick_drawer(3);
         /*
         /// Rotate 90 degrees
         state.setValue("rotate");
@@ -193,6 +196,8 @@ public class AutonomousMiddle extends LinearOpMode {
      * @return key drawer
      */
     protected int getKeyDrawer() {
+        if (true)
+            return 1;
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
         parameters.vuforiaLicenseKey = "AT4pxIn/////AAAAGSL31MQ2OkEAlE8fAGFaXLprsCGiwn5e81ZDhALBFUMK45pVGTrKvkFV9ZBC8LGo2fubVHcyc2JBpk2bsXVf/0zESirRkEkFjIItegiTFBB6wwQeeBcANTIZAFH1EjAo6QDGxlMTyhJ6JJQmrm2yBPFJFpfWDus1E34IVIyLHc8V/iCSTuegaorAlk1MXV7r2jog5G5rwsWhfD6CDx2E85s1cD20eEC4XQqx2pgcbG0CB1ohiPIYG0jtj373VY8gn9PfX2YJDBe/sLAx4IbxQxvtpgL5PAhAFcTdPfYAi6GmUzLbWQDITzao3dFlxiJjRA8fklV5KsBKJFj6viP+m3HybrTgW6kR+VOFbU2J2wD8";
@@ -333,7 +338,7 @@ public class AutonomousMiddle extends LinearOpMode {
 
     protected void go_to_drawer ()
     {
-        double initPower = 0.6;
+        double initPower = 0.2;
 
         int orientation = gyro.getHeading();
         rnr.setPower(-1,1, initPower * forward);
@@ -386,4 +391,30 @@ public class AutonomousMiddle extends LinearOpMode {
         sleep(500);
         collector.moveLift(0.0);
     }
+    protected void pick_drawer(int nr) {
+        if (nr == 1)
+            rnr.distanceMove(10, 0.3);
+        if (nr == 2)
+            rnr.distanceMove(30, 0.4);
+        if (nr == 3)
+            rnr.distanceMove(50, 0.5);
+        if( !opModeIsActive() ) return;
+
+    }
+   /* private void place_cube()
+    {
+        double pw;
+        while(true)
+        {
+            pw=( dist_f-8 )*( 1 / 22 );
+                rnr.setPower(-pw,pw);
+                if( pw <= 0.05 && pw >= 0.0 )
+                {
+                    break;
+                    rnr.setPower(0.0,0.0);
+                }
+        }
+        collector.openArms(3);
+        if (!opModeIsActive()) return;
+    }*/
 }
