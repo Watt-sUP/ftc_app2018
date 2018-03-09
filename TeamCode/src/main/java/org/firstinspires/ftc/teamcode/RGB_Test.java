@@ -54,7 +54,6 @@ public class RGB_Test extends LinearOpMode {
                             hardwareMap.get(DcMotor.class, "red"),
                             hardwareMap.get(DcMotor.class, "green"),
                             hardwareMap.get(DcMotor.class, "blue"),
-                            hardwareMap.get(VoltageSensor.class, "voltage"),
                             rgbTelemetry);
 
         waitForStart();

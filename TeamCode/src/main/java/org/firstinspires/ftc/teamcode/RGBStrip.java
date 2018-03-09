@@ -1,6 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
 
+import android.view.Display;
+
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsUsbDcMotorController;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 
@@ -15,15 +18,16 @@ public class RGBStrip
     private VoltageSensor voltage_sensor;
     private Telemetry.Item telemetry;
     private boolean verbose = false;
+    private ModernRoboticsUsbDcMotorController controller;
 
-    RGBStrip(DcMotor _plus, DcMotor _red, DcMotor _green, DcMotor _blue, VoltageSensor voltage, Object... _telemetry)
+    RGBStrip(DcMotor _plus, DcMotor _red, DcMotor _green, DcMotor _blue, Object... _telemetry)
     {
         plus = _plus; red = _red; green = _green; blue = _blue;
         plus.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         red.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         green.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         blue.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        voltage_sensor=voltage;
+        controller = (ModernRoboticsUsbDcMotorController) plus.getController();
         if(_telemetry.length > 0 && (_telemetry[0] instanceof Telemetry.Item))
         {
             verbose = true;
@@ -43,7 +47,7 @@ public class RGBStrip
 
     public void setColor(int r, int g, int b)
     {
-        if(r == 0 && g == 0 && b == 0 || voltage_sensor.getVoltage()<11.0)
+        if( (r == 0 && g == 0 && b == 0) || controller.getVoltage() < 11.0 )
         {
             off();
             return;
