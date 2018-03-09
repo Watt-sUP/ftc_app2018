@@ -59,7 +59,7 @@ public class SensorMRCompass extends LinearOpMode {
     private double fXg = 0;
     private double fYg = 0;
     private double fZg = 0;
-    private double alpha = 0.5;
+    private double alpha = 0.9;
 
     @Override public void runOpMode() {
 
@@ -77,8 +77,8 @@ public class SensorMRCompass extends LinearOpMode {
         telemetry.log().add("compass in a full 360 degree circle while keeping");
         telemetry.log().add("it level. When complete, press 'B'.");
 
-        compass.setMode(CompassSensor.CompassMode.CALIBRATION_MODE);
-        sleep(200);
+        //compass.setMode(CompassSensor.CompassMode.CALIBRATION_MODE);
+        //sleep(200);
         compass.setMode(CompassSensor.CompassMode.MEASUREMENT_MODE);
 
         // wait for the start button to be pressed

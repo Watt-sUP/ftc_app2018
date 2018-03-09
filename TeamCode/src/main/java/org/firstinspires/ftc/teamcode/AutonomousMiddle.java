@@ -43,6 +43,9 @@ public class AutonomousMiddle extends LinearOpMode {
     protected ModernRoboticsI2cColorSensor colorSensor;
     protected ModernRoboticsAnalogOpticalDistanceSensor ods;
 
+    /// Servo
+    protected Servo extender, rotor;
+
     /// Variables
     protected static int forward = 0;
     protected static int color = 0;    /// Red = 0, Blue = 1
@@ -88,6 +91,9 @@ public class AutonomousMiddle extends LinearOpMode {
                 hardwareMap.get(DcMotor.class, "lifter"),
                 collectorTelemetry
         );
+
+        extender = hardwareMap.get(Servo.class, "extender");
+        rotor = hardwareMap.get(Servo.class, "rotor");
 
         gyroTelemetry = telemetry.addData("Gyro", "Not initialized");
         gyro = hardwareMap.get(ModernRoboticsI2cGyro.class, "gyro");
@@ -141,6 +147,10 @@ public class AutonomousMiddle extends LinearOpMode {
         if (!opModeIsActive()) return;
 
         /// TODO: get color and score jewels
+        state.setValue("score jewels");
+        telemetry.update();
+        scoreJewels();
+        if(!opModeIsActive())   return;
 
         /// Get down from platform
         state.setValue("get down from platform");
@@ -199,6 +209,23 @@ public class AutonomousMiddle extends LinearOpMode {
         if (vuMark == RelicRecoveryVuMark.CENTER) return 2;
         if (vuMark == RelicRecoveryVuMark.RIGHT) return 3;
         return 2;
+    }
+
+    protected void scoreJewels()
+    {
+        rotor.setPosition(0.5);
+        sleep(100);
+        extender.setPosition(0.6);
+
+        int clr = 0;
+        if(colorSensor.red() > colorSensor.blue())  clr = 0;
+        else    clr = 1;
+
+        if(clr == color)    rotor.setPosition(0.0);
+        else    rotor.setPosition(1.0);
+
+        sleep(100);
+        extender.setPosition(0.0);
     }
 
     protected double getPitch()
