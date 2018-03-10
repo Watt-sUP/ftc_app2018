@@ -16,7 +16,7 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 @TeleOp(name="ServoTest", group="Linear Opmode")
-//@Disabled
+@Disabled
 public class ServoTest extends LinearOpMode {
 
     // Declare OpMode members.
