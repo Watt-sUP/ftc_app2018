@@ -130,4 +130,9 @@ public class RelicGrabber
         if(val == 0)    claw.getController().pwmDisable();
         if(val == 1)    claw.getController().pwmEnable();
     }
+
+    public void powerMonster(double power)
+    {
+        monster.setPower(power);
+    }
 }

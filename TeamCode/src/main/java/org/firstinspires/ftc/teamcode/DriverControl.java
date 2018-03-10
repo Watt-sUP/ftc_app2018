@@ -107,26 +107,11 @@ public class DriverControl extends LinearOpMode
             collector.moveLift(-gamepad2.left_stick_y * 0.75);
 
             if(gamepad2.left_bumper)
-            {
-                if(!lb)
-                {
-                    lb = true;
-                    grabber.addValue(0, -0.05);
-                }
-            }
+                grabber.powerMonster(-0.05);
+            else if(gamepad2.right_bumper)
+                grabber.powerMonster(0.1);
             else
-                lb = false;
-
-            if(gamepad2.right_bumper)
-            {
-                if(!rb)
-                {
-                    rb = true;
-                    grabber.addValue(0, 0.05);
-                }
-            }
-            else
-                rb = false;
+                grabber.powerMonster(0.0);
 
             if(gamepad2.left_trigger > 0.5 || gamepad2.right_trigger > 0.5)
             {
@@ -140,9 +125,10 @@ public class DriverControl extends LinearOpMode
                 trg = false;
 
             double g2ry = -gamepad2.right_stick_y;
-            if(g2ry == 0)   grabber.movePusher(0.0);
+            grabber.movePusher(g2ry * 0.5);
+            /*if(g2ry == 0)   grabber.movePusher(0.0);
             else if(g2ry > 0)   grabber.movePusher(g2ry * 0.1);
-            else if(g2ry < 0)   grabber.movePusher(g2ry * 0.05);
+            else if(g2ry < 0)   grabber.movePusher(g2ry * 0.05);*/
 
             /// Telemetry
             timeTelemetry.setValue(runtime.toString());
