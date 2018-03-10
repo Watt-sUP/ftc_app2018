@@ -124,6 +124,7 @@ public class AutonomousMiddle extends LinearOpMode {
 
         Telemetry.Item colorTelemtry = telemetry.addData("Color", 0);
         colorSensor = hardwareMap.get(ModernRoboticsI2cColorSensor.class, "colors");
+        colorSensor.enableLed(false);
 
         waitForStart();
         runtime.reset();
@@ -223,12 +224,14 @@ public class AutonomousMiddle extends LinearOpMode {
         sleep(100);
         extender.setPosition(0.7);
 
+        colorSensor.enableLed(true);
         int clr = 0;
         if(colorSensor.red() > colorSensor.blue())  clr = 0;
         else    clr = 1;
 
         if(clr == color)    rotor.setPosition(1.0);
         else    rotor.setPosition(0.0);
+        colorSensor.enableLed(false);
 
         sleep(100);
         rotor.setPosition(0.6);
