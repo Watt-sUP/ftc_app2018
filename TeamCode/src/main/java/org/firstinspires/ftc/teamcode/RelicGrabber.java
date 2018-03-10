@@ -65,7 +65,7 @@ public class RelicGrabber
             verbose = false;
 
         pusher.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        monster.setPosition(monsterP[0]);
+        monster.setPosition(0.1);
         claw.setPosition(clawP[1]);
     }
 
@@ -87,22 +87,12 @@ public class RelicGrabber
     public void setPusherMode(DcMotor.RunMode rm) { pusher.setMode(rm); }
 
     /**
-     * Change state of current servo
-     * @param servo 0 = monster
-     *              1 = claw
+     * Change state of claw
      */
-    public void changeState(int servo)
+    public void changeStateClaw()
     {
-        if(servo == 0)
-        {
-            stateMonster ^= 1;
-            monster.setPosition(monsterP[stateMonster]);
-        }
-        else if(servo == 1)
-        {
-            stateClaw ^= 1;
-            claw.setPosition(clawP[stateClaw]);
-        }
+        stateClaw ^= 1;
+        claw.setPosition(clawP[stateClaw]);
     }
 
     /**

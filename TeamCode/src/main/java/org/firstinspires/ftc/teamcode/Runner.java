@@ -169,16 +169,30 @@ public class Runner {
 
         DcMotor.RunMode oldMode = leftF.getMode();
 
+        setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        leftF.setTargetPosition( leftF.getCurrentPosition() - add );
-        leftB.setTargetPosition( leftB.getCurrentPosition() - add );
-        rightF.setTargetPosition( rightF.getCurrentPosition() + add );
-        rightB.setTargetPosition( rightB.getCurrentPosition() + add );
+
+        leftF.setTargetPosition( -add );
+        leftB.setTargetPosition( -add );
+        rightF.setTargetPosition( add );
+        rightB.setTargetPosition( add );
 
         power = Math.abs(power);
         setPower(power, power);
 
-        while( leftF.isBusy()&&rightF.isBusy()&&leftB.isBusy()&&rightB.isBusy());
+        while( leftF.getPower() > 0.0 || rightF.getPower() > 0.0 )
+        {
+            if(!leftF.isBusy() || !leftB.isBusy())
+            {
+                leftF.setPower(0.0);
+                leftB.setPower(0.0);
+            }
+            if(!rightF.isBusy() || !rightB.isBusy())
+            {
+                rightF.setPower(0.0);
+                rightB.setPower(0.0);
+            }
+        }
 
         setPower(0.0, 0.0);
 

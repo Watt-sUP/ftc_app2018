@@ -102,6 +102,17 @@ public class CubeCollector
         lift.setPower(power);
     }
 
+    public void moveToPosition(int pos)
+    {
+        DcMotor.RunMode rm = lift.getMode();
+        lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        lift.setTargetPosition(pos);
+        lift.setPower(0.5);
+        while(lift.isBusy());
+        lift.setPower(0.0);
+        lift.setMode(rm);
+    }
+
     /**
      * Set run mode for lift motor
      * @param rm the new RunMode

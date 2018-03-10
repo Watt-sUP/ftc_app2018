@@ -53,7 +53,7 @@ public class AutonomousMiddle extends LinearOpMode {
     /// Variables
     protected static int forward = 0;
     protected static int color = 0;    /// Red = 0, Blue = 1
-    int nr=0;
+    protected int nr=0;
     /// Vuforia
     protected VuforiaLocalizer vuforia;
 
@@ -114,15 +114,11 @@ public class AutonomousMiddle extends LinearOpMode {
         dist_s = new I2CRangeSensor(hardwareMap.get(I2cDevice.class, "dists"), 0x2c);
 
         compass = hardwareMap.get(ModernRoboticsI2cCompassSensor.class, "compass");
-        //compass.setMode(CompassSensor.CompassMode.CALIBRATION_MODE);
-        //sleep(200);
         compass.setMode(CompassSensor.CompassMode.MEASUREMENT_MODE);
         compassTelemetry = telemetry.addData("Compass", "init");
 
         Telemetry.Item colorTelemtry = telemetry.addData("Color", 0);
-        //colorSensor = hardwareMap.get(ColorSensor.class, "color");
-
-        //if( !opModeIsActive() ) return;
+        colorSensor = hardwareMap.get(ModernRoboticsI2cColorSensor.class, "colors");
 
         waitForStart();
         runtime.reset();
@@ -134,23 +130,6 @@ public class AutonomousMiddle extends LinearOpMode {
         ////////////////////////// START
 
         /// Grab cube
-
-        Telemetry.Item df, ds, dr;
-        df = telemetry.addData("Distanta fata", "init");
-        dr = telemetry.addData("Distanta dreapta", "init");
-        ds = telemetry.addData("Distanta spate", "init");
-        telemetry.update();
-
-        while(true)
-        {
-            df.setValue(dist_f.getDistanceCM());
-            dr.setValue(dist_r.getDistanceCM());
-            ds.setValue(dist_s.getDistanceCM());
-            telemetry.update();
-            if(!opModeIsActive())   return;
-            if(false)   break;
-        }
-
         state.setValue("grab cube");
         telemetry.update();
         grab_cube();
@@ -159,17 +138,16 @@ public class AutonomousMiddle extends LinearOpMode {
         /// Gets key drawer
         state.setValue("get key drawer");
         telemetry.update();
-        /*
         int drawer = getKeyDrawer();
         if (forward == 1) drawer = 4 - drawer;
         if (!opModeIsActive()) return;
 
-        /// TODO: get color and score jewels
         state.setValue("score jewels");
         telemetry.update();
-        //scoreJewels();
+        scoreJewels();
         if(!opModeIsActive())   return;
-*/
+
+        /*
         /// Get down from platform
         state.setValue("get down from platform");
         telemetry.update();
@@ -200,6 +178,7 @@ public class AutonomousMiddle extends LinearOpMode {
         telemetry.update();
         place_cube();
         if( !opModeIsActive() ) return;
+        */
 
 
         /// TODO: get more cubes
@@ -285,7 +264,7 @@ public class AutonomousMiddle extends LinearOpMode {
         int step = 0;
 
         double initPower = 0.2;
-        while( nr==0)
+        while( true )
         {
 
             double currentHeading = getPitch();
@@ -317,7 +296,10 @@ public class AutonomousMiddle extends LinearOpMode {
                 else
                 {
                     if( last_dist - dist >=7 )
+                    {
                         nr ++;
+                        break;
+                    }
                     double pw = power * dif * 0.12;
                     rnr.setPower(-pw, pw);
                 }
@@ -370,13 +352,7 @@ public class AutonomousMiddle extends LinearOpMode {
         int orientation = gyro.getHeading();
         rnr.setPower(-1,1, initPower * forward);
 
-
         double last_dist = dist_r.getDistanceCM();
-
-        rangeTelemetry = telemetry.addData("Range", String.format("%.3f", last_dist));
-        nrTelemetry = telemetry.addData("Nr", nr);
-        lft = telemetry.addData("Left", -1);
-        rgt = telemetry.addData("Right", -1);
         telemetry.update();
 
         while ( nr < 1 )
@@ -392,7 +368,7 @@ public class AutonomousMiddle extends LinearOpMode {
             nrTelemetry.setValue(nr);
             gyroTelemetry.setValue(gyro.getHeading());
             telemetry.update();
-            sleep(200);
+            sleep(100);
             if( !opModeIsActive() ) return;
         }
 
@@ -414,10 +390,9 @@ public class AutonomousMiddle extends LinearOpMode {
     protected void grab_cube()
     {
         collector.closeArms(1);
-        collector.moveLift(0.0);
-        sleep(500);
-        collector.moveLift(0.0);
+        //collector.moveToPosition(100);
     }
+
     protected void pick_drawer(int nr) {
         if (nr == 1)
             rnr.distanceMove(7.5, 0.3);
@@ -428,7 +403,7 @@ public class AutonomousMiddle extends LinearOpMode {
         if( !opModeIsActive() ) return;
 
     }
-   private void place_cube()
+   protected void place_cube()
     {
         //dist_r = null;
         //dist_f = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "distf");

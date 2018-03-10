@@ -24,12 +24,14 @@ public class ServoConfig extends LinearOpMode {
 
         int L = 0;
         Servo[] servoArray = new Servo[25];
-        servoArray[L] = hardwareMap.get(Servo.class, "upleft"); L++;
-        servoArray[L] = hardwareMap.get(Servo.class, "upright"); L++;
-        servoArray[L] = hardwareMap.get(Servo.class, "downleft"); L++;
-        servoArray[L] = hardwareMap.get(Servo.class, "downright"); L++;
-        servoArray[L] = hardwareMap.get(Servo.class, "monster"); L++;
-        servoArray[L] = hardwareMap.get(Servo.class, "claw"); L++;
+        servoArray[L] = hardwareMap.get(Servo.class, "extender"); L++;
+        servoArray[L] = hardwareMap.get(Servo.class, "rotor"); L++;
+        //servoArray[L] = hardwareMap.get(Servo.class, "upleft"); L++;
+        //servoArray[L] = hardwareMap.get(Servo.class, "upright"); L++;
+        //servoArray[L] = hardwareMap.get(Servo.class, "downleft"); L++;
+        //servoArray[L] = hardwareMap.get(Servo.class, "downright"); L++;
+        //servoArray[L] = hardwareMap.get(Servo.class, "monster"); L++;
+        //servoArray[L] = hardwareMap.get(Servo.class, "claw"); L++;
 
         for(int i = 0; i < L; i++)  servoArray[i].setPosition(0.5);
 

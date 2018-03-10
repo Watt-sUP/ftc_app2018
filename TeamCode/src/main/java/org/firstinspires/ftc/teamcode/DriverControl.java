@@ -18,6 +18,7 @@ public class DriverControl extends LinearOpMode
     private ElapsedTime runtime = new ElapsedTime();
     private Runner runner;
     private CubeCollector collector;
+    private RelicGrabber grabber;
 
     @Override
     public void runOpMode()
@@ -46,6 +47,12 @@ public class DriverControl extends LinearOpMode
                 collectorTelemetry
         );
 
+        grabber = new RelicGrabber(
+                hardwareMap.get(Servo.class, "monster"),
+                hardwareMap.get(Servo.class, "claw"),
+                hardwareMap.get(DcMotor.class, "pusher")
+        );
+
         telemetry.update();
 
         waitForStart();
@@ -54,8 +61,10 @@ public class DriverControl extends LinearOpMode
         /// Initializations after start
         runner.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         collector.setLiftMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        grabber.setPusherMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         int[] last = {0, 0, 0, 0};
+        boolean lb = false, rb = false, trg = false;
 
         while (opModeIsActive())
         {
@@ -96,6 +105,41 @@ public class DriverControl extends LinearOpMode
             else if(!gamepad2.b) last[3] = 0;
 
             collector.moveLift(-gamepad2.left_stick_y * 0.75);
+
+            if(gamepad2.left_bumper)
+            {
+                if(!lb)
+                {
+                    lb = true;
+                    grabber.addValue(0, -0.05);
+                }
+            }
+            else
+                lb = false;
+
+            if(gamepad2.right_bumper)
+            {
+                if(!rb)
+                {
+                    rb = true;
+                    grabber.addValue(0, 0.05);
+                }
+            }
+            else
+                rb = false;
+
+            if(gamepad2.left_trigger > 0.5 || gamepad2.right_trigger > 0.5)
+            {
+                if(!trg)
+                {
+                    trg = true;
+                    grabber.changeStateClaw();
+                }
+            }
+            else
+                trg = false;
+
+            grabber.movePusher(-gamepad2.left_stick_y * 0.5);
 
             /// Telemetry
             timeTelemetry.setValue(runtime.toString());
