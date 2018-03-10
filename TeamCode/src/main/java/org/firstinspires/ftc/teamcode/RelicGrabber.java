@@ -34,7 +34,7 @@ public class RelicGrabber
      * pushP = constant values to limit the actions for push motor
      */
     private double monsterP[] = {0.0, 1.0};
-    private double clawP[] = {0.0, 1.0};
+    private double clawP[] = {0.4, 0.15};
     private int pushP[] = {0, (int)(1e6)};
     /// TODO: Get constant values
 
@@ -65,8 +65,8 @@ public class RelicGrabber
             verbose = false;
 
         pusher.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        monster.setPosition(0.1);
-        claw.setPosition(clawP[1]);
+        monster.setPosition(0.0);
+        claw.setPosition(clawP[0]);
     }
 
     /**
