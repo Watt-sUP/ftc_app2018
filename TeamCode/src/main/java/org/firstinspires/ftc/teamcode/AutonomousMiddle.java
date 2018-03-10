@@ -15,6 +15,7 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.CompassSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.hardware.I2cDevice;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -42,7 +43,7 @@ public class AutonomousMiddle extends LinearOpMode {
 
     /// Sensors
     protected ModernRoboticsI2cGyro gyro;
-    protected ModernRoboticsI2cRangeSensor dist_r,dist_f;
+    protected I2CRangeSensor dist_f, dist_r, dist_s;
     protected ModernRoboticsI2cCompassSensor compass;
     protected ModernRoboticsI2cColorSensor colorSensor;
 
@@ -62,7 +63,7 @@ public class AutonomousMiddle extends LinearOpMode {
     protected double fZg = 0;
 
     /// Telemetry
-    Telemetry.Item gyroTelemetry, rangeTelemetry, nrTelemetry, compassTelemetry, odsTelemetry;
+    Telemetry.Item gyroTelemetry, rangeTelemetry, nrTelemetry, compassTelemetry;
     Telemetry.Item lft, rgt;
 
     @Override
@@ -108,8 +109,9 @@ public class AutonomousMiddle extends LinearOpMode {
         }
         gyroTelemetry.setValue("Calibrated!");
 
-        dist_f = null;
-        dist_r = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "distr");
+        dist_f = new I2CRangeSensor(hardwareMap.get(I2cDevice.class, "distf"), 0x28);
+        dist_r = new I2CRangeSensor(hardwareMap.get(I2cDevice.class, "distr"), 0x2a);
+        dist_s = new I2CRangeSensor(hardwareMap.get(I2cDevice.class, "dists"), 0x2c);
 
         compass = hardwareMap.get(ModernRoboticsI2cCompassSensor.class, "compass");
         //compass.setMode(CompassSensor.CompassMode.CALIBRATION_MODE);
@@ -133,6 +135,21 @@ public class AutonomousMiddle extends LinearOpMode {
 
         /// Grab cube
 
+        Telemetry.Item df, ds, dr;
+        df = telemetry.addData("Distanta fata", "init");
+        dr = telemetry.addData("Distanta dreapta", "init");
+        ds = telemetry.addData("Distanta spate", "init");
+        telemetry.update();
+
+        while(true)
+        {
+            df.setValue(dist_f.getDistanceCM());
+            dr.setValue(dist_r.getDistanceCM());
+            ds.setValue(dist_s.getDistanceCM());
+            telemetry.update();
+            if(!opModeIsActive())   return;
+            if(false)   break;
+        }
 
         state.setValue("grab cube");
         telemetry.update();
@@ -264,7 +281,7 @@ public class AutonomousMiddle extends LinearOpMode {
         double deg1 = 3.0;
         double okDegrees = 1;
         //rnr.setPower(-power * forward, power * forward);
-        double last_dist = dist_r.getDistance(DistanceUnit.CM);
+        double last_dist = dist_r.getDistanceCM();
         int step = 0;
 
         double initPower = 0.2;
@@ -274,9 +291,8 @@ public class AutonomousMiddle extends LinearOpMode {
             double currentHeading = getPitch();
             //compassTelemetry.setValue(currentHeading);
             //telemetry.update();
-            double dist = dist_r.getDistance(DistanceUnit.CM);
+            double dist = dist_r.getDistanceCM();
 
-            last_dist = dist;
             //sleep(200);
             double dif = heading - currentHeading;
 
@@ -307,6 +323,7 @@ public class AutonomousMiddle extends LinearOpMode {
                 }
             }
 
+            last_dist = dist;
             lastDif = dif;
 
             if(!opModeIsActive())   return;
@@ -354,7 +371,7 @@ public class AutonomousMiddle extends LinearOpMode {
         rnr.setPower(-1,1, initPower * forward);
 
 
-        double last_dist = dist_r.getDistance(DistanceUnit.CM);
+        double last_dist = dist_r.getDistanceCM();
 
         rangeTelemetry = telemetry.addData("Range", String.format("%.3f", last_dist));
         nrTelemetry = telemetry.addData("Nr", nr);
@@ -365,7 +382,7 @@ public class AutonomousMiddle extends LinearOpMode {
         while ( nr < 1 )
         {
             //Keep_Orientation(orientation);
-            double dist = dist_r.getDistance(DistanceUnit.CM);
+            double dist = dist_r.getDistanceCM();
             if( last_dist - dist >= 5 )
                 nr ++;
             last_dist = dist;
@@ -413,10 +430,10 @@ public class AutonomousMiddle extends LinearOpMode {
     }
    private void place_cube()
     {
-        dist_r = null;
-        dist_f = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "distf");
+        //dist_r = null;
+        //dist_f = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "distf");
         double pw=0.3;
-        while(dist_f.getDistance(DistanceUnit.CM)>=23)
+        while(dist_f.getDistanceCM()>=23)
         {
             rnr.setPower(-pw,pw);
 

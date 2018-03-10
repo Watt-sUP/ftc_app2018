@@ -20,6 +20,8 @@ public class I2CRangeSensor
 
     public int cmUltrasonicMax = 255;
 
+    public double lst = 255;
+
     I2CRangeSensor(I2cDevice _sensor, int _addr)
     {
         sensor = _sensor;
@@ -37,19 +39,21 @@ public class I2CRangeSensor
     {
         cache = reader.read(0x04, 2);
         int ultrasonic = cache[0] & 0xFF;
-        int optical = cache[1] & 0xFF;
 
-        double cm = 0.0;
+        double cm = ultrasonic;
+        if(ultrasonic == 255)
+            return lst;
 
-        if(optical >= rawOpticalMinValid)
+        lst = cm;
+        return cm;
+
+        /*if(optical >= rawOpticalMinValid)
         {
             cm = getOpticalCM(optical);
         }
         else
         {
             cm = ultrasonic;
-        }
-
-        return cm;
+        }*/
     }
 }
