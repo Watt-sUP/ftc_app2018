@@ -15,11 +15,11 @@ public class RelicGrabber
      * 0. monster = big servo
      * 1. claw = small servo attached to the big servo
      */
-    private Servo monster, claw;
+    private Servo claw;
     /**
      * pusher = push motor
      */
-    private DcMotor pusher;
+    private DcMotor monster, pusher;
 
     /**
      * telemetry = telemetry item assigned to the moving system
@@ -51,7 +51,7 @@ public class RelicGrabber
      * @param _pusher push motor
      * @param _telemetry OPTIONAL -> telemetry item
      */
-    RelicGrabber(Servo _monster, Servo _claw, DcMotor _pusher, Object... _telemetry)
+    RelicGrabber(DcMotor _monster, Servo _claw, DcMotor _pusher, Object... _telemetry)
     {
         monster = _monster; claw = _claw; pusher = _pusher;
 
@@ -65,7 +65,8 @@ public class RelicGrabber
             verbose = false;
 
         pusher.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        monster.setPosition(0.0);
+        monster.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        monster.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         claw.setPosition(clawP[0]);
     }
 
@@ -117,7 +118,6 @@ public class RelicGrabber
      */
     public void addValue(int servo, double val)
     {
-        if(servo == 0)  addValue(monster, val);
         if(servo == 1)  addValue(claw, val);
     }
 
@@ -127,18 +127,7 @@ public class RelicGrabber
      */
     public void setPower(int val)
     {
-        if(val == 0)    monster.getController().pwmDisable();
-        if(val == 1)    monster.getController().pwmEnable();
-    }
-
-    /**
-     * Logs information to telemetry if verbose is true
-     * @param info information type
-     */
-    public void logInformation(String info)
-    {
-        if(!verbose)    return;
-        if(info == "Positions") telemetry.setValue( String.format("$.3f", monster.getPosition()) + " " + String.format("%.3f", claw.getPosition() ) +
-                " " + pusher.getCurrentPosition());
+        if(val == 0)    claw.getController().pwmDisable();
+        if(val == 1)    claw.getController().pwmEnable();
     }
 }

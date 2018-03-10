@@ -48,7 +48,7 @@ public class DriverControl extends LinearOpMode
         );
 
         grabber = new RelicGrabber(
-                hardwareMap.get(Servo.class, "monster"),
+                hardwareMap.get(DcMotor.class, "monster"),
                 hardwareMap.get(Servo.class, "claw"),
                 hardwareMap.get(DcMotor.class, "pusher")
         );
@@ -139,7 +139,10 @@ public class DriverControl extends LinearOpMode
             else
                 trg = false;
 
-            grabber.movePusher(-gamepad2.left_stick_y * 0.5);
+            double g2ry = -gamepad2.right_stick_y;
+            if(g2ry == 0)   grabber.movePusher(0.0);
+            else if(g2ry > 0)   grabber.movePusher(g2ry * 0.1);
+            else if(g2ry < 0)   grabber.movePusher(g2ry * 0.05);
 
             /// Telemetry
             timeTelemetry.setValue(runtime.toString());
