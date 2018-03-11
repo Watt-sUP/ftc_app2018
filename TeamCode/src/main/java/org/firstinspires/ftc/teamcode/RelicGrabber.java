@@ -54,6 +54,7 @@ public class RelicGrabber
     RelicGrabber(DcMotor _monster, Servo _claw, DcMotor _pusher, Object... _telemetry)
     {
         monster = _monster; claw = _claw; pusher = _pusher;
+        monster.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         if(_telemetry.length > 0 && (_telemetry[0] instanceof Telemetry.Item))
         {
