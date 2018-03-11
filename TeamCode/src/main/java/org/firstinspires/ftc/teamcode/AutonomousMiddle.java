@@ -117,8 +117,11 @@ public class AutonomousMiddle extends LinearOpMode {
         compass.setMode(CompassSensor.CompassMode.MEASUREMENT_MODE);
         compassTelemetry = telemetry.addData("Compass", "init");
 
+        extender = hardwareMap.get(Servo.class, "extender");
+        rotor = hardwareMap.get(Servo.class, "rotor");
+
         Telemetry.Item colorTelemtry = telemetry.addData("Color", 0);
-        //colorSensor = hardwareMap.get(ColorSensor.class, "color");
+        colorSensor = hardwareMap.get(ModernRoboticsI2cColorSensor.class, "colors");
 
         //if( !opModeIsActive() ) return;
 
@@ -145,13 +148,13 @@ public class AutonomousMiddle extends LinearOpMode {
         /*
         int drawer = getKeyDrawer();
         if (forward == 1) drawer = 4 - drawer;
-        if (!opModeIsActive()) return;
+        if (!opModeIsActive()) return;*/
         /// TODO: get color and score jewels
         state.setValue("score jewels");
         telemetry.update();
-        //scoreJewels();
+        scoreJewels();
         if(!opModeIsActive())   return;
-*/
+
         /// Get down from platform
         state.setValue("get down from platform");
         telemetry.update();
@@ -218,19 +221,35 @@ public class AutonomousMiddle extends LinearOpMode {
 
     protected void scoreJewels()
     {
-        rotor.setPosition(0.5);
-        sleep(100);
-        extender.setPosition(0.6);
+        rotor.setPosition(0.55);
+        sleep(1000);
+        extender.setPosition(0.83);
+        sleep(2000);
 
+        colorSensor.enableLed(true);
         int clr = 0;
         if(colorSensor.red() > colorSensor.blue())  clr = 0;
         else    clr = 1;
 
-        if(clr == color)    rotor.setPosition(0.0);
-        else    rotor.setPosition(1.0);
+        telemetry.addData("Red", colorSensor.red());
+        telemetry.addData("Blue", colorSensor.blue());
+        telemetry.update();
 
-        sleep(100);
-        extender.setPosition(0.0);
+        sleep(400);
+
+        if(clr == color)    rotor.setPosition(1.0);
+        else    rotor.setPosition(0.0);
+        colorSensor.enableLed(false);
+
+        sleep(1000);
+        extender.setPosition(0.5);
+        sleep(1000);
+        rotor.setPosition(0.55);
+        sleep(500);
+        extender.setPosition(0.05);
+        sleep(500);
+        rotor.setPosition(0.1);
+        sleep(500);
     }
 
     protected double getPitch()
@@ -395,8 +414,8 @@ public class AutonomousMiddle extends LinearOpMode {
     protected void grab_cube()
     {
         collector.closeArms(1);
-        collector.moveLift(0.0);
-        sleep(500);
+        collector.moveLift(0.5);
+        sleep(300);
         collector.moveLift(0.0);
     }
     protected void pick_drawer(int nr) {
@@ -412,7 +431,7 @@ public class AutonomousMiddle extends LinearOpMode {
     private void place_cube()
     {
         rnr.setPower(-0.5, 0.5);
-        sleep(1500);
+        sleep(1000);
         rnr.setPower(0, 0);
         /*dist_r = null;
         dist_f = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "distf");
@@ -423,7 +442,13 @@ public class AutonomousMiddle extends LinearOpMode {
 
         }
         rnr.setPower(0.0,0.0);*/
+
         collector.openArms(3);
+
+        rnr.setPower(0.5, -0.5);
+        sleep(500);
+        rnr.setPower(0.0, 0.0);
+
         if (!opModeIsActive()) return;
     }
 }
