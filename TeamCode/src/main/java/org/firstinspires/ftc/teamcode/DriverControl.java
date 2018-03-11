@@ -106,12 +106,20 @@ public class DriverControl extends LinearOpMode
 
             collector.moveLift(-gamepad2.left_stick_y * 0.75);
 
-            if(gamepad2.left_bumper)
+            /*if(gamepad2.left_bumper)
                 grabber.powerMonster(-0.1);
             else if(gamepad2.right_bumper)
                 grabber.powerMonster(0.5);
             else
-                grabber.powerMonster(0.0);
+                grabber.powerMonster(0.0);*/
+            //grabber.powerMonster(-gamepad2.right_stick_y);
+
+            if(gamepad2.left_bumper)
+                grabber.movePusher(-0.2);
+            else if(gamepad2.right_bumper)
+                grabber.movePusher(0.2);
+            else
+                grabber.movePusher(0.0);
 
             if(gamepad2.left_trigger > 0.5 || gamepad2.right_trigger > 0.5)
             {
@@ -124,8 +132,10 @@ public class DriverControl extends LinearOpMode
             else
                 trg = false;
 
-            double g2ry = gamepad2.right_stick_y;
-            grabber.movePusher(g2ry * 0.25);
+            double g2ry = -gamepad2.right_stick_y;
+            if(g2ry > 0)    grabber.powerMonster(g2ry);
+            else grabber.powerMonster(g2ry * 0.2);
+            //grabber.movePusher(g2ry * 0.25);
             /*if(g2ry == 0)   grabber.movePusher(0.0);
             else if(g2ry > 0)   grabber.movePusher(g2ry * 0.1);
             else if(g2ry < 0)   grabber.movePusher(g2ry * 0.05);*/

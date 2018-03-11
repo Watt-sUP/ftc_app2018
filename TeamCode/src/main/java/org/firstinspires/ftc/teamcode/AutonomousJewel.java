@@ -83,6 +83,8 @@ public class AutonomousJewel extends LinearOpMode {
         else    rotor.setPosition(0.0);
         colorSensor.enableLed(false);
 
+        sleep(1000);
+        extender.setPosition(0.5);
         sleep(2000);
         rotor.setPosition(0.55);
         sleep(1000);

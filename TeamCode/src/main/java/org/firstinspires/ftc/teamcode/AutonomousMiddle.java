@@ -411,15 +411,18 @@ public class AutonomousMiddle extends LinearOpMode {
     }
     private void place_cube()
     {
-        dist_r = null;
+        rnr.setPower(-0.5, 0.5);
+        sleep(1500);
+        rnr.setPower(0, 0);
+        /*dist_r = null;
         dist_f = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "distf");
         double pw=0.3;
         while(dist_f.getDistance(DistanceUnit.CM)>=23)
         {
-            rnr.setPower(-pw,pw, forward);
+            rnr.setPower(-pw,pw);
 
         }
-        rnr.setPower(0.0,0.0);
+        rnr.setPower(0.0,0.0);*/
         collector.openArms(3);
         if (!opModeIsActive()) return;
     }
