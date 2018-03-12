@@ -133,8 +133,12 @@ public class DriverControl extends LinearOpMode
                 trg = false;
 
             double g2ry = -gamepad2.right_stick_y;
-            if(g2ry > 0)    grabber.powerMonster(g2ry * 0.45);
-            else grabber.powerMonster(g2ry * 0.1);
+            if(g2ry < 0)    grabber.powerMonster(g2ry * 0.1);
+            else
+            {
+                if(gamepad2.dpad_up)    grabber.powerMonster(g2ry * 0.5);
+                else    grabber.powerMonster(g2ry * 0.3);
+            }
             //grabber.movePusher(g2ry * 0.25);
             /*if(g2ry == 0)   grabber.movePusher(0.0);
             else if(g2ry > 0)   grabber.movePusher(g2ry * 0.1);
