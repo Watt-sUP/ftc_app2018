@@ -63,9 +63,9 @@ public class AutonomousJewel extends LinearOpMode {
 
     protected void scoreJewels()
     {
-        rotor.setPosition(0.55);
+        rotor.setPosition(0.75);
         sleep(1000);
-        extender.setPosition(0.83);
+        extender.setPosition(0.33);
         sleep(2000);
 
         colorSensor.enableLed(true);
@@ -80,17 +80,17 @@ public class AutonomousJewel extends LinearOpMode {
         sleep(400);
 
         if(clr == color)    rotor.setPosition(1.0);
-        else    rotor.setPosition(0.0);
+        else    rotor.setPosition(0.5);
         colorSensor.enableLed(false);
 
         sleep(1000);
-        extender.setPosition(0.5);
+        extender.setPosition(1);
         sleep(2000);
-        rotor.setPosition(0.55);
-        sleep(1000);
-        extender.setPosition(0.05);
-        sleep(1000);
-        rotor.setPosition(0.1);
-        sleep(1000);
+        rotor.setPosition(1);
+        //sleep(1000);
+        //extender.setPosition(0.05);
+        //sleep(1000);
+        //rotor.setPosition(0.1);
+        //sleep(1000);
     }
 }

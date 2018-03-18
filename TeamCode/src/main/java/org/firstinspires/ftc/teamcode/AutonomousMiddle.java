@@ -49,6 +49,7 @@ public class AutonomousMiddle extends LinearOpMode {
     /// Servo
     protected Servo extender, rotor;
 
+
     /// Variables
     protected static int forward = 0;
     protected static int color = 0;    /// Red = 0, Blue = 1
@@ -118,6 +119,7 @@ public class AutonomousMiddle extends LinearOpMode {
         compassTelemetry = telemetry.addData("Compass", "init");
 
         extender = hardwareMap.get(Servo.class, "extender");
+        extender.setPosition(1.0);
         rotor = hardwareMap.get(Servo.class, "rotor");
 
         Telemetry.Item colorTelemtry = telemetry.addData("Color", 0);
