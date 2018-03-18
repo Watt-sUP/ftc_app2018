@@ -48,25 +48,29 @@ public class AutonomousJewel extends LinearOpMode {
 
         extender = hardwareMap.get(Servo.class, "extender");
         rotor = hardwareMap.get(Servo.class, "rotor");
+        extender.setPosition(1.0);
 
         Telemetry.Item state = telemetry.addData("State", "init");
         colorSensor = hardwareMap.get(ModernRoboticsI2cColorSensor.class, "colors");
-        colorSensor.enableLed(false);
+        colorSensor.enableLed(true);
 
         waitForStart();
         runtime.reset();
 
         ////////////////////////// START
 
+
         scoreJewels();
+
+
     }
 
     protected void scoreJewels()
     {
-        rotor.setPosition(0.75);
-        sleep(1000);
+        rotor.setPosition(0.55);
+        sleep(750);
         extender.setPosition(0.33);
-        sleep(2000);
+        sleep(1000);
 
         colorSensor.enableLed(true);
         int clr = 0;
@@ -80,17 +84,13 @@ public class AutonomousJewel extends LinearOpMode {
         sleep(400);
 
         if(clr == color)    rotor.setPosition(1.0);
-        else    rotor.setPosition(0.5);
-        colorSensor.enableLed(false);
+        else    rotor.setPosition(0.0);
+        //colorSensor.enableLed(false);
 
         sleep(1000);
         extender.setPosition(1);
-        sleep(2000);
+        sleep(1000);
         rotor.setPosition(1);
-        //sleep(1000);
-        //extender.setPosition(0.05);
-        //sleep(1000);
-        //rotor.setPosition(0.1);
-        //sleep(1000);
+
     }
 }
