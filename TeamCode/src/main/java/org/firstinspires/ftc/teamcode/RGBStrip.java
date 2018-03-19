@@ -16,25 +16,23 @@ public class RGBStrip
 {
     // Initialization of all objects
 
-    private DcMotor plus, red, green, blue;
+    private DcMotor  red, green, blue;
     private Telemetry.Item telemetry;
     private boolean verbose = false;
     private ModernRoboticsUsbDcMotorController controller;
 
     /**
      * Constructor
-     * @param _plus : represents the Motor controller port where the RGB Strip anode is connected.
      * @param _red :  represents the Motor controller port where the RGB Strip cathode corresponding to green is connected.
      * @param _blue :  represents the Motor controller port where the RGB Strip cathode corresponding to blue is connected.
      */
     RGBStrip(DcMotor _plus, DcMotor _red, DcMotor _green, DcMotor _blue, Object... _telemetry)
     {
-        plus = _plus; red = _red; green = _green; blue = _blue;
-        plus.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        red = _red; green = _green; blue = _blue;
         red.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         green.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         blue.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        controller = (ModernRoboticsUsbDcMotorController) plus.getController();
+        controller = (ModernRoboticsUsbDcMotorController) red.getController();
         if(_telemetry.length > 0 && (_telemetry[0] instanceof Telemetry.Item))
         {
             verbose = true;
@@ -49,12 +47,13 @@ public class RGBStrip
 
     public void off()
     {
-        plus.setPower(0.0);
-        red.setPower(0.0);
-        green.setPower(0.0);
-        blue.setPower(0.0);
+        red.setPower(-0.01);
+        green.setPower(-0.01);
+        blue.setPower(-0.01);
     }
+
      //Set those parameters to the RGB values from the colors you need.
+
     public void setColor(int r, int g, int b)
     {
         if( (r == 0 && g == 0 && b == 0) || controller.getVoltage() < 11.0 )
@@ -71,7 +70,6 @@ public class RGBStrip
         if(g == 0)  gPower = -0.01;
         if(b == 0)  bPower = -0.01;
 
-        plus.setPower(0.01);
         red.setPower(rPower);
         green.setPower(gPower);
         blue.setPower(bPower);
@@ -81,7 +79,7 @@ public class RGBStrip
 
     public void logInformation()
     {
-        telemetry.setValue( String.format("%.3f", plus.getPower()) + " " + String.format("%.3f", red.getPower()) + " " +
+        telemetry.setValue( String.format("%.3f", red.getPower()) + " " +
                 String.format("%.3f",green.getPower()) + " " + String.format("%.3f", blue.getPower()) );
     }
 }
