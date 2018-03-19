@@ -25,6 +25,7 @@ public class RGBStrip
      * Constructor
      * @param _red :  represents the Motor controller port where the RGB Strip cathode corresponding to green is connected.
      * @param _blue :  represents the Motor controller port where the RGB Strip cathode corresponding to blue is connected.
+     * @param _green :  represents the Motor controller port where the RGB Strip cathode corresponding to green is connected.
      */
     RGBStrip(DcMotor _plus, DcMotor _red, DcMotor _green, DcMotor _blue, Object... _telemetry)
     {
