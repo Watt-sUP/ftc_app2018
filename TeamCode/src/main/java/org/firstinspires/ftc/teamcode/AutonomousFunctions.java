@@ -44,7 +44,7 @@ public abstract class AutonomousFunctions extends LinearOpMode {
     /// Variables
     protected static int forward = 0;
     protected static int color = 0;    /// Red = 0, Blue = 1
-    int nr=0;
+    protected int nr=0;
     /// Vuforia
     protected VuforiaLocalizer vuforia;
 
@@ -109,8 +109,9 @@ public abstract class AutonomousFunctions extends LinearOpMode {
         compassTelemetry = telemetry.addData("Compass", "init");
 
         extender = hardwareMap.get(Servo.class, "extender");
-        extender.setPosition(1.0);
         rotor = hardwareMap.get(Servo.class, "rotor");
+        extender.setDirection(Servo.Direction.REVERSE);
+        extender.setPosition(0.0);
 
         Telemetry.Item colorTelemtry = telemetry.addData("Color", 0);
         colorSensor = hardwareMap.get(ModernRoboticsI2cColorSensor.class, "colors");
@@ -201,7 +202,6 @@ public abstract class AutonomousFunctions extends LinearOpMode {
     protected void getDown()
     {
         double power = 0.3;
-        double lastDif = 0.0;
         double heading = getPitch();
         double deg1 = 3.0;
         double okDegrees = 1;
@@ -209,16 +209,13 @@ public abstract class AutonomousFunctions extends LinearOpMode {
         double last_dist = dist_r.getDistance(DistanceUnit.CM);
         int step = 0;
 
-        double initPower = 0.2;
         while( nr==0)
         {
 
             double currentHeading = getPitch();
-            //compassTelemetry.setValue(currentHeading);
-            //telemetry.update();
+            compassTelemetry.setValue(currentHeading);
+            telemetry.update();
             double dist = dist_r.getDistance(DistanceUnit.CM);
-
-            last_dist = dist;
             //sleep(200);
             double dif = heading - currentHeading;
 
@@ -236,21 +233,12 @@ public abstract class AutonomousFunctions extends LinearOpMode {
                     break;
                 }
 
-                if(lastDif < dif)
-                {
-                    rnr.setPower(-power, power, forward);
-                }
-                else
-                {
-                    if( last_dist - dist >=7 )
-                        nr ++;
-                    double pw = power * dif * 0.12;
-                    rnr.setPower(-pw, pw, forward);
-                }
+                if( last_dist - dist >=7 )
+                    nr ++;
+                double pw = power * dif * 0.12;
+                rnr.setPower(-pw, pw, forward);
             }
-
-            lastDif = dif;
-
+            last_dist = dist;
             if(!opModeIsActive())   return;
         }
 
@@ -260,14 +248,14 @@ public abstract class AutonomousFunctions extends LinearOpMode {
 
     protected void Keep_Orientation(int Optimal_pos)
     {
-        int okDegrees = 2;
+        int okDegrees = 1;
 
-        while (gyro.getHeading() != Optimal_pos)
+        while (true)
         {
-            gyroTelemetry.setValue(gyro.getHeading());
-            telemetry.update();
-
             int heading = gyro.getHeading();
+
+            gyroTelemetry.setValue(gyro.getIntegratedZValue());
+            telemetry.update();
 
             int left = 0;
             if (Optimal_pos > heading) left = -heading + Optimal_pos;
@@ -277,12 +265,12 @@ public abstract class AutonomousFunctions extends LinearOpMode {
             if (Optimal_pos > heading) right = -Optimal_pos + heading + 360;
             else right = -Optimal_pos + heading;
 
-            if( Math.min(left, right) <= okDegrees ) return;
+            //if( Math.min(left, right) <= okDegrees ) return;
 
             if (left < right)
-                rnr.setPower(left, left, 0.008);
+                rnr.setPower(left, left, 0.000);
             else
-                rnr.setPower(-right, -right, 0.008);
+                rnr.setPower(-right, -right, 0.000);
 
             if( !opModeIsActive() ) return;
         }
@@ -336,11 +324,11 @@ public abstract class AutonomousFunctions extends LinearOpMode {
     }
     protected void pick_drawer(int nr) {
         if (nr == 1)
-            rnr.distanceMove(7.5 * forward, 0.3);
+            rnr.distanceMove(10 * forward, 0.3);
         if (nr == 2)
-            rnr.distanceMove(22.5 * forward, 0.3);
+            rnr.distanceMove(26 * forward, 0.3);
         if (nr == 3)
-            rnr.distanceMove(37.5 * forward, 0.3);
+            rnr.distanceMove(41 * forward, 0.3);
         if( !opModeIsActive() ) return;
 
     }
@@ -360,10 +348,14 @@ public abstract class AutonomousFunctions extends LinearOpMode {
         rnr.setPower(0.0,0.0);*/
 
         collector.openArms(3);
+        sleep(500);
+        if(!opModeIsActive())   return;
 
         rnr.setPower(0.5, -0.5);
+        if(!opModeIsActive())   return;
         sleep(500);
         rnr.setPower(0.0, 0.0);
+        if(!opModeIsActive())   return;
 
         if (!opModeIsActive()) return;
     }
