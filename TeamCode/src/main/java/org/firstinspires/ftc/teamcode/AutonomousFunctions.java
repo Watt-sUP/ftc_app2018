@@ -254,7 +254,7 @@ public abstract class AutonomousFunctions extends LinearOpMode {
         {
             int heading = gyro.getHeading();
 
-            gyroTelemetry.setValue(gyro.getIntegratedZValue());
+            gyroTelemetry.setValue(heading);
             telemetry.update();
 
             int left = 0;
@@ -265,12 +265,12 @@ public abstract class AutonomousFunctions extends LinearOpMode {
             if (Optimal_pos > heading) right = -Optimal_pos + heading + 360;
             else right = -Optimal_pos + heading;
 
-            //if( Math.min(left, right) <= okDegrees ) return;
+            if( Math.min(left, right) <= okDegrees ) return;
 
             if (left < right)
-                rnr.setPower(left, left, 0.000);
+                rnr.setPower(left, left, 0.004);
             else
-                rnr.setPower(-right, -right, 0.000);
+                rnr.setPower(-right, -right, 0.004);
 
             if( !opModeIsActive() ) return;
         }
@@ -310,9 +310,6 @@ public abstract class AutonomousFunctions extends LinearOpMode {
         }
 
         rnr.setPower(0.0,0.0);
-
-        //places the robot in the middle of the (night :))) drawer space
-        //rnr.distanceMove(10 * forward, 0.4);
     }
 
     protected void grab_cube()
