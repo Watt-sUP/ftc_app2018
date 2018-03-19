@@ -136,7 +136,7 @@ public class DriverControl extends LinearOpMode
             }
             else
                 trg = false;
-
+            // Reversing gamepad x axis
             double g2ry = -gamepad2.right_stick_y;
             if(g2ry < 0)    grabber.powerMonster(g2ry * 0.1);
             else
