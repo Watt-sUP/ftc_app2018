@@ -67,7 +67,7 @@ public class AutonomousJewel extends LinearOpMode {
 
     protected void scoreJewels()
     {
-        rotor.setPosition(0.55);
+        rotor.setPosition(0.45);
         sleep(750);
         extender.setPosition(0.33);
         sleep(1000);
