@@ -14,12 +14,19 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
  */
 public class RGBStrip
 {
+    // Initialization of all objects
+
     private DcMotor plus, red, green, blue;
-    private VoltageSensor voltage_sensor;
     private Telemetry.Item telemetry;
     private boolean verbose = false;
     private ModernRoboticsUsbDcMotorController controller;
 
+    /**
+     * Constructor
+     * @param _plus : represents the Motor controller port where the RGB Strip anode is connected.
+     * @param _red :  represents the Motor controller port where the RGB Strip cathode corresponding to green is connected.
+     * @param _blue :  represents the Motor controller port where the RGB Strip cathode corresponding to blue is connected.
+     */
     RGBStrip(DcMotor _plus, DcMotor _red, DcMotor _green, DcMotor _blue, Object... _telemetry)
     {
         plus = _plus; red = _red; green = _green; blue = _blue;
@@ -37,6 +44,9 @@ public class RGBStrip
             verbose = false;
     }
 
+    //Turns off the RGB Strip
+
+
     public void off()
     {
         plus.setPower(0.0);
@@ -44,7 +54,7 @@ public class RGBStrip
         green.setPower(0.0);
         blue.setPower(0.0);
     }
-
+     //Set those parameters to the RGB values from the colors you need.
     public void setColor(int r, int g, int b)
     {
         if( (r == 0 && g == 0 && b == 0) || controller.getVoltage() < 11.0 )
@@ -66,6 +76,8 @@ public class RGBStrip
         green.setPower(gPower);
         blue.setPower(bPower);
     }
+
+    // Displays Telemetry
 
     public void logInformation()
     {
