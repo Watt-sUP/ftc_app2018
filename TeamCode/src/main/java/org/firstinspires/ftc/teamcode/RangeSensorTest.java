@@ -20,6 +20,7 @@ public class RangeSensorTest extends AutonomousFunctions {
         Servo extender;
         extender=hardwareMap.get(Servo.class,"extender");
         extender.setPosition(1.0);
+
         initialization ();
 
 
