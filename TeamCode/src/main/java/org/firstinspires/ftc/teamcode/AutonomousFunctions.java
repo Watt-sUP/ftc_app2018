@@ -229,7 +229,9 @@ public abstract class AutonomousFunctions extends LinearOpMode {
             double dist = dist_r.getDistance(DistanceUnit.CM);
             //sleep(200);
             double dif = heading - currentHeading;
-
+            // This lines makes a proportional gain for the motors power relative to the robot pitch( inclanation ),
+            // relative to the horizont. Because the difference between initial value and the current value is dropping to a point an then climbing,
+            //we need to check and see where we are in this interval, so that we can scale the motors power like an Monotonic descending function
             if(step == 0)
             {
                 if(dif >= deg1)  step++;
