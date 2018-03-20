@@ -70,10 +70,23 @@ public class DriverControl extends LinearOpMode
 
         int[] last = {0, 0, 0, 0};
         boolean lb = false, rb = false, trg = false;
+        int forward = 1;
 
         while (opModeIsActive())
         {
             /// gamepad1 functions
+
+            if(gamepad1.dpad_down)
+            {
+                if(forward == 1) runner.swapMotors();
+                forward = -1;
+            }
+            if(gamepad1.dpad_up)
+            {
+                if(forward == -1)   runner.swapMotors();
+                forward = 1;
+            }
+
             double rnrY = -gamepad1.left_stick_y;
             double rnrX = gamepad1.right_stick_x;
             if(gamepad1.left_bumper) runner.move(rnrY, rnrX, 0.25);
@@ -119,9 +132,9 @@ public class DriverControl extends LinearOpMode
                 grabber.powerMonster(0.0);*/
             //grabber.powerMonster(-gamepad2.right_stick_y);
 
-            if(gamepad2.left_bumper)
+            if(gamepad2.right_bumper)
                 grabber.movePusher(-0.2);
-            else if(gamepad2.right_bumper)
+            else if(gamepad2.left_bumper)
                 grabber.movePusher(0.2);
             else
                 grabber.movePusher(0.0);
@@ -138,7 +151,11 @@ public class DriverControl extends LinearOpMode
                 trg = false;
             // Reversing gamepad x axis
             double g2ry = -gamepad2.right_stick_y;
-            if(g2ry < 0)    grabber.powerMonster(g2ry * 0.1);
+            if(g2ry < 0)
+            {
+                if(gamepad2.dpad_down)  grabber.powerMonster(g2ry * 0.5);
+                else grabber.powerMonster(g2ry * 0.1);
+            }
             else
             {
                 if(gamepad2.dpad_up)    grabber.powerMonster(g2ry * 0.5);

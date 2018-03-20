@@ -149,6 +149,13 @@ public class Runner {
             setPower(-y, y - y * x, r);
     }
 
+    public void swapMotors()
+    {
+        DcMotor aux;
+        aux = leftF; leftF = rightB; rightB = aux;
+        aux = leftB; leftB = rightF; rightF = aux;
+    }
+
     /**
      * Moves robot according to gamepad axis Y(forward-backward), X(rotation) and no scale ratio
      * @param y forward-backward axis
