@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @Autonomous(name="Blue Side", group="Linear Opmode")
-@Disabled
+//@Disabled
 public class AutonomousBlueSide extends AutonomousFunctions {
 
     static
