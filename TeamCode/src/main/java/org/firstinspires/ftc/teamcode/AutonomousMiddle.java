@@ -35,10 +35,16 @@ import java.security.KeyPair;
 @Disabled
 public class AutonomousMiddle extends AutonomousFunctions {
     @Override
+
     public void runOpMode() {
+        Servo extender;
+        extender=hardwareMap.get(Servo.class,"extender");
+        extender.setPosition(1.0);
         initialization ();
 
+
         waitForStart();
+
         runtime.reset();
 
 

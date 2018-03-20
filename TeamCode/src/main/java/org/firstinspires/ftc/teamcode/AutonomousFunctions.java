@@ -38,7 +38,7 @@ public abstract class AutonomousFunctions extends LinearOpMode {
     protected ModernRoboticsI2cColorSensor colorSensor;
 
     /// Servo
-    protected Servo extender, rotor;
+    protected Servo rotor;
 
 
     /// Variables
@@ -108,10 +108,9 @@ public abstract class AutonomousFunctions extends LinearOpMode {
         compass.setMode(CompassSensor.CompassMode.MEASUREMENT_MODE);
         compassTelemetry = telemetry.addData("Compass", "init");
 
-        extender = hardwareMap.get(Servo.class, "extender");
+        //extender = hardwareMap.get(Servo.class, "extender");
         rotor = hardwareMap.get(Servo.class, "rotor");
-        extender.setDirection(Servo.Direction.REVERSE);
-        extender.setPosition(0.0);
+        //extender.setPosition(1.0);
 
         Telemetry.Item colorTelemtry = telemetry.addData("Color", 0);
         colorSensor = hardwareMap.get(ModernRoboticsI2cColorSensor.class, "colors");
@@ -149,7 +148,7 @@ public abstract class AutonomousFunctions extends LinearOpMode {
         return 2;
     }
 
-    protected void scoreJewels()
+    protected void scoreJewels(Servo extender)
     {
         rotor.setPosition(0.45);
         sleep(750);
