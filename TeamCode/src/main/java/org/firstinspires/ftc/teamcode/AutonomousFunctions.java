@@ -290,7 +290,7 @@ public abstract class AutonomousFunctions extends LinearOpMode {
             if( !opModeIsActive() ) return;
         }
     }
-
+    // THIS METHOD STOPS THE ROBOT IN FRONT OF THE FIRST DRAWER , IT RECOGNIZES THE DRAWER USING RANGE SENSOR
     protected void go_to_drawer ()
     {
         double initPower = 0.2;
