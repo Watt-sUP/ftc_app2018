@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.util.Range;
 import java.util.List;
 
 @TeleOp(name="Servo Config", group="Linear Opmode")
-@Disabled
+//@Disabled
 public class ServoConfig extends LinearOpMode {
 
     // Declare OpMode members.
@@ -26,10 +26,10 @@ public class ServoConfig extends LinearOpMode {
         Servo[] servoArray = new Servo[25];
         servoArray[L] = hardwareMap.get(Servo.class, "extender"); L++;
         servoArray[L] = hardwareMap.get(Servo.class, "rotor"); L++;
-        //servoArray[L] = hardwareMap.get(Servo.class, "upleft"); L++;
-        //servoArray[L] = hardwareMap.get(Servo.class, "upright"); L++;
-        //servoArray[L] = hardwareMap.get(Servo.class, "downleft"); L++;
-        //servoArray[L] = hardwareMap.get(Servo.class, "downright"); L++;
+        servoArray[L] = hardwareMap.get(Servo.class, "upleft"); L++;
+        servoArray[L] = hardwareMap.get(Servo.class, "upright"); L++;
+        servoArray[L] = hardwareMap.get(Servo.class, "downleft"); L++;
+        servoArray[L] = hardwareMap.get(Servo.class, "downright"); L++;
         //servoArray[L] = hardwareMap.get(Servo.class, "monster"); L++;
         //servoArray[L] = hardwareMap.get(Servo.class, "claw"); L++;
 

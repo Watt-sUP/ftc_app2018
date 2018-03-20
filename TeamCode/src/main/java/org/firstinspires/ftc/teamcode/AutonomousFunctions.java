@@ -150,7 +150,7 @@ public abstract class AutonomousFunctions extends LinearOpMode {
 
     protected void scoreJewels(Servo extender)
     {
-        rotor.setPosition(0.45);
+        rotor.setPosition(0.5);
         sleep(750);
         extender.setPosition(0.33);
         sleep(1000);

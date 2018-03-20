@@ -39,8 +39,8 @@ public class CubeCollector
      * midP = constant values of the middle positions of servos
      */
     /// TODO: get better values, so we don't kill the servos
-    private double[] openP = {0.55, 0.35, 0.2, 0.75};
-    private double[] closeP = {0.2, 0.6, 0.55, 0.45};
+    private double[] openP = {0.65, 0.2, 0.1, 0.85};
+    private double[] closeP = {0.25, 0.6, 0.55, 0.45};
     private double[] midP = {0.5, 0.5, 0.5, 0.5};
 
     /**
