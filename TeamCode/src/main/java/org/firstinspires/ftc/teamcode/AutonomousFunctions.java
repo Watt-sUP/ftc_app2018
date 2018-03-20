@@ -57,6 +57,7 @@ public abstract class AutonomousFunctions extends LinearOpMode {
     protected Telemetry.Item gyroTelemetry, rangeTelemetry, nrTelemetry, compassTelemetry, odsTelemetry;
     protected Telemetry.Item lft, rgt, state;
 
+    // initializes objects
     protected void initialization()
     {
         telemetry.setAutoClear(false);
@@ -83,7 +84,7 @@ public abstract class AutonomousFunctions extends LinearOpMode {
                 hardwareMap.get(DcMotor.class, "lifter"),
                 collectorTelemetry
         );
-
+        //gyro calibration process
         gyroTelemetry = telemetry.addData("Gyro", "Not initialized");
         gyro = hardwareMap.get(ModernRoboticsI2cGyro.class, "gyro");
         gyroTelemetry.setValue("Calibrating...");
@@ -147,7 +148,7 @@ public abstract class AutonomousFunctions extends LinearOpMode {
         if (vuMark == RelicRecoveryVuMark.RIGHT) return 3;
         return 2;
     }
-
+    // CALL THIS METHOD FOR SCORING JEWELS
     protected void scoreJewels(Servo extender)
     {
         rotor.setPosition(0.5);
@@ -175,7 +176,7 @@ public abstract class AutonomousFunctions extends LinearOpMode {
         sleep(1000);
         rotor.setPosition(1);
     }
-
+    // THIS METHOD RETURNS THE PITCH RELATIVE TO THE HORIZONT LINE, FROM THE ACCELEROMETER SENSOR
     protected double getPitch()
     {
         double alpha = 0.5;
@@ -197,7 +198,7 @@ public abstract class AutonomousFunctions extends LinearOpMode {
         double pitch = ( Math.atan2(-fXg, Math.sqrt(fYg * fYg + fZg * fZg)) * 180.0 ) / Math.PI;
         return pitch;
     }
-
+    // CALL THIS METHOD TO GET DOWN FROM PLATFORM
     protected void getDown()
     {
         double power = 0.3;
@@ -244,7 +245,10 @@ public abstract class AutonomousFunctions extends LinearOpMode {
         Keep_Orientation(0);
     }
 
-
+    /**
+     * KEEPS THE ROBOT TO A DESIRED ORIENTATION
+     * @PARAM OPTIMAL_POS : THE DESIRED ORIENTATION (IN DEGREES)
+     */
     protected void Keep_Orientation(double Optimal_pos)
     {
         double okDegrees = 2;
@@ -310,7 +314,7 @@ public abstract class AutonomousFunctions extends LinearOpMode {
 
         rnr.setPower(0.0,0.0);
     }
-
+    // CALL THIS METHOD TO GRAB CUBE
     protected void grab_cube()
     {
         collector.closeArms(1);
@@ -318,6 +322,12 @@ public abstract class AutonomousFunctions extends LinearOpMode {
         sleep(300);
         collector.moveLift(0.0);
     }
+    /**
+     *THIS METHOD ESTABLISHES HOW MUCH OF A DISTANCE DOES THE ROBOT NEEDS TO GO AFTER SEEING THE FIRST DRAWER,TO PLACE ITSELF
+     IN FRONT OF THE NEEDED DRAWER
+     * @PARAM nr: VALUE RETURNED FROM getKeyDrawer()
+     */
+
     protected void pick_drawer(int nr) {
         if (nr == 1)
             rnr.distanceMove(10 * forward, 0.3, this);
@@ -328,7 +338,7 @@ public abstract class AutonomousFunctions extends LinearOpMode {
         if( !opModeIsActive() ) return;
 
     }
-
+    // CALL THIS METHOD FOR PLACING THE CUBE AFTER ROTATING IN FRONT OF THE CORRECT DRAWER, GUIDED BY TIME
     protected void place_cube()
     {
         rnr.setPower(-0.3, 0.3);
@@ -357,7 +367,7 @@ public abstract class AutonomousFunctions extends LinearOpMode {
 
         if (!opModeIsActive()) return;
     }
-
+    // CALL THIS METHOD FOR PLACING THE CUBE AFTER ROTATING IN FRONT OF THE CORRECT DRAWER, GUIDED BY ENCODERS
     protected void place_cube_encoders()
     {
         rnr.distanceMove(20, 0.25, this);
@@ -371,7 +381,7 @@ public abstract class AutonomousFunctions extends LinearOpMode {
         sleep(100);
         rnr.distanceMove(-15, 0.25, this);
     }
-
+    // THIS METHOD GETS THE REAL  INTEGRATED Z VALUE FROM THE GYRO SENSOR ( THE ONE RETURNED BY DEFAULT IS NOT CORRECT IN OUR CASE)
     protected double gyroGetIntegratedZ()
     {
         double angle = gyro.getIntegratedZValue();
@@ -379,7 +389,7 @@ public abstract class AutonomousFunctions extends LinearOpMode {
         angle *= scale;
         return angle;
     }
-
+    // THIS METHOD CONVERTS FROM INTEGRATED Z VALUE TO HEADING ( THE OANE RETURNED BY DEFAULT IS NOT CORRECT)
     protected double getGyroHeading()
     {
         double angle = gyroGetIntegratedZ();
