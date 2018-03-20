@@ -208,7 +208,7 @@ public abstract class AutonomousFunctions extends LinearOpMode {
         double last_dist = dist_r.getDistance(DistanceUnit.CM);
         int step = 0;
 
-        while( nr==0)
+        while( nr == 0 )
         {
 
             double currentHeading = getPitch();
@@ -234,7 +234,7 @@ public abstract class AutonomousFunctions extends LinearOpMode {
 
                 if( last_dist - dist >=7 )
                     nr ++;
-                double pw = power * dif * 0.12;
+                double pw = power * dif * 0.2;
                 rnr.setPower(-pw, pw, forward);
             }
             last_dist = dist;
@@ -245,13 +245,13 @@ public abstract class AutonomousFunctions extends LinearOpMode {
     }
 
 
-    protected void Keep_Orientation(int Optimal_pos)
+    protected void Keep_Orientation(double Optimal_pos)
     {
-        int okDegrees = 1;
+        double okDegrees = 2;
 
         while (true)
         {
-            double heading = gyro.getHeading();
+            double heading = getGyroHeading();
 
             gyroTelemetry.setValue(heading);
             telemetry.update();
@@ -267,9 +267,9 @@ public abstract class AutonomousFunctions extends LinearOpMode {
             if( Math.min(left, right) <= okDegrees ) return;
 
             if (left < right)
-                rnr.setPower(left, left, 0.004);
+                rnr.setPower(left, left, 0.006);
             else
-                rnr.setPower(-right, -right, 0.004);
+                rnr.setPower(-right, -right, 0.006);
 
             if( !opModeIsActive() ) return;
         }
@@ -314,23 +314,24 @@ public abstract class AutonomousFunctions extends LinearOpMode {
     protected void grab_cube()
     {
         collector.closeArms(1);
-        //collector.moveLift(0.5);
-        //sleep(300);
+        collector.moveLift(0.5);
+        sleep(300);
         collector.moveLift(0.0);
     }
     protected void pick_drawer(int nr) {
         if (nr == 1)
-            rnr.distanceMove(10 * forward, 0.3);
+            rnr.distanceMove(10 * forward, 0.3, this);
         if (nr == 2)
-            rnr.distanceMove(26 * forward, 0.3);
+            rnr.distanceMove(25.5 * forward, 0.3, this);
         if (nr == 3)
-            rnr.distanceMove(41 * forward, 0.3);
+            rnr.distanceMove(40.5 * forward, 0.3, this);
         if( !opModeIsActive() ) return;
 
     }
+
     protected void place_cube()
     {
-        rnr.setPower(-0.5, 0.5);
+        rnr.setPower(-0.3, 0.3);
         sleep(1000);
         rnr.setPower(0, 0);
         /*dist_r = null;
@@ -344,22 +345,36 @@ public abstract class AutonomousFunctions extends LinearOpMode {
         rnr.setPower(0.0,0.0);*/
 
         collector.openArms(3);
-        sleep(500);
+        rnr.setPower(0, 0);
+        sleep(1000);
         if(!opModeIsActive())   return;
 
-        rnr.setPower(0.5, -0.5);
+        rnr.setPower(0.1, -0.1);
         if(!opModeIsActive())   return;
-        sleep(500);
+        sleep(1500);
         rnr.setPower(0.0, 0.0);
         if(!opModeIsActive())   return;
 
         if (!opModeIsActive()) return;
     }
 
+    protected void place_cube_encoders()
+    {
+        rnr.distanceMove(40, 0.25, this);
+        collector.openArms(3);
+        sleep(500);
+        rnr.distanceMove(-20, 0.25, this);
+        sleep(500);
+        collector.closeArms(1);
+        sleep(100);
+        rnr.distanceMove(30, 0.25, this);
+        rnr.distanceMove(-15, 0.25, this);
+    }
+
     protected double gyroGetIntegratedZ()
     {
         double angle = gyro.getIntegratedZValue();
-        double scale = 360 / 346;
+        double scale = 360.0 / 346.0;
         angle *= scale;
         return angle;
     }

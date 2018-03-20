@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
@@ -162,7 +163,7 @@ public class Runner {
      * Moves robot cm centimeters forward (> 0) or backward (< 0)
      * @param cm number of centimeters
      */
-    public void distanceMove(double cm, double power)
+    public void distanceMove(double cm, double power, LinearOpMode opmode)
     {
         double addTicks = cm / wheelLength * ticksPerRevolution;
         int add = (int)Math.round(addTicks);
@@ -192,10 +193,15 @@ public class Runner {
                 rightF.setPower(0.0);
                 rightB.setPower(0.0);
             }
+            if(!opmode.opModeIsActive())
+            {
+                setPower(0, 0);
+                setMode(oldMode);
+                return;
+            }
         }
 
         setPower(0.0, 0.0);
-
         setMode(oldMode);
     }
 
