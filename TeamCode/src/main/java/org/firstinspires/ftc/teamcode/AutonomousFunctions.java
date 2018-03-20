@@ -159,6 +159,7 @@ public abstract class AutonomousFunctions extends LinearOpMode {
         colorSensor.enableLed(true);
         int clr = 0;
         if(colorSensor.red() > colorSensor.blue())  clr = 0;
+        else if(colorSensor.red() == colorSensor.blue())    clr = -1;
         else    clr = 1;
 
         telemetry.addData("Red", colorSensor.red());
@@ -168,13 +169,13 @@ public abstract class AutonomousFunctions extends LinearOpMode {
         sleep(400);
 
         if(clr == color)    rotor.setPosition(1.0);
-        else    rotor.setPosition(0.0);
+        else if(clr != -1)    rotor.setPosition(0.0);
         //colorSensor.enableLed(false);
 
         sleep(1000);
         extender.setPosition(1);
-        sleep(1000);
-        rotor.setPosition(1);
+        sleep(500);
+        rotor.setPosition(0);
     }
     // THIS METHOD RETURNS THE PITCH RELATIVE TO THE HORIZONT LINE, FROM THE ACCELEROMETER SENSOR
     protected double getPitch()
@@ -318,6 +319,7 @@ public abstract class AutonomousFunctions extends LinearOpMode {
     protected void grab_cube()
     {
         collector.closeArms(1);
+        sleep(100);
         collector.moveLift(0.5);
         sleep(300);
         collector.moveLift(0.0);
