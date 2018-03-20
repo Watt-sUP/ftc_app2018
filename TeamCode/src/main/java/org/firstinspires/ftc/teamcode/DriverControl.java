@@ -49,7 +49,7 @@ public class DriverControl extends LinearOpMode
 
         grabber = new RelicGrabber(
                 hardwareMap.get(DcMotor.class, "monster"),
-                null,
+                hardwareMap.get(Servo.class, "claw"),
                 hardwareMap.get(DcMotor.class, "pusher")
         );
 

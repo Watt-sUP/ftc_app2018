@@ -165,10 +165,11 @@ public abstract class AutonomousFunctions extends LinearOpMode {
         if(clr == -1)
         {
             rotor.setPosition(0.45);
+            extender.setPosition(0.35);
+            sleep(200);
             if(colorSensor.red() > colorSensor.blue())  clr = 0;
             else if(colorSensor.red() == colorSensor.blue())    clr = -1;
             else    clr = 1;
-            sleep(200);
         }
 
         telemetry.addData("Red", colorSensor.red());
@@ -251,8 +252,6 @@ public abstract class AutonomousFunctions extends LinearOpMode {
             last_dist = dist;
             if(!opModeIsActive())   return;
         }
-
-        Keep_Orientation(0);
     }
 
     /**
@@ -341,7 +340,7 @@ public abstract class AutonomousFunctions extends LinearOpMode {
 
     protected void pick_drawer(int nr) {
         if (nr == 1)
-            rnr.distanceMove(7 * forward, 0.3, this);
+            rnr.distanceMove(6 * forward, 0.3, this);
         if (nr == 2)
             rnr.distanceMove(25.5 * forward, 0.3, this);
         if (nr == 3)
@@ -379,16 +378,22 @@ public abstract class AutonomousFunctions extends LinearOpMode {
         if (!opModeIsActive()) return;
     }
     // CALL THIS METHOD FOR PLACING THE CUBE AFTER ROTATING IN FRONT OF THE CORRECT DRAWER, GUIDED BY ENCODERS
-    protected void place_cube_encoders()
+    protected void place_cube_encoders(boolean middle)
     {
-        rnr.distanceMove(20, 0.25, this);
+        if(middle)
+            rnr.distanceMove(20, 0.25, this);
+        else
+            rnr.distanceMove(30, 0.25, this);
         collector.openArms(3);
         sleep(500);
-        rnr.distanceMove(-20, 0.25, this);
+        rnr.distanceMove(-15, 0.25, this);
         sleep(500);
+
+        if(runtime.seconds() > 28.0)    return;
+
         collector.closeArms(3);
         sleep(100);
-        rnr.distanceMove(20, 0.25, this);
+        rnr.distanceMove(15, 0.25, this);
         sleep(100);
         rnr.distanceMove(-15, 0.25, this);
     }

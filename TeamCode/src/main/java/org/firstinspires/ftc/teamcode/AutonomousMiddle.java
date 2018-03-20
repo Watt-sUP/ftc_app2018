@@ -70,6 +70,7 @@ public class AutonomousMiddle extends AutonomousFunctions {
         state.setValue("get down from platform");
         telemetry.update();
         getDown();
+        Keep_Orientation(0);
         if(!opModeIsActive())   return;
 
         /// Go in front of first drawer
@@ -93,7 +94,7 @@ public class AutonomousMiddle extends AutonomousFunctions {
         /// Place cube
         state.setValue("place cube");
         telemetry.update();
-        place_cube_encoders();
+        place_cube_encoders(true);
         if( !opModeIsActive() ) return;
     }
 }
