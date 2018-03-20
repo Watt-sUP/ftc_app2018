@@ -148,7 +148,7 @@ public class Runner {
         else if(x > 0)
             setPower(-y, y - y * x, r);
     }
-
+    // CALL THIS METHOD TO SWITCH MOTORS
     public void swapMotors()
     {
         DcMotor aux;

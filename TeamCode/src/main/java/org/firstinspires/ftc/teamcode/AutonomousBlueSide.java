@@ -16,6 +16,7 @@ public class AutonomousBlueSide extends AutonomousFunctions {
 
     @Override
     public void runOpMode() {
+        // DECLARE THE EXTENDER SERVO ,CORESPONDING TO JEWEL DROPPING ARM SO THAT WE COULD SET THE INIT POSITION TO A STRAIGHT ONE (1.0)
         Servo extender;
         extender=hardwareMap.get(Servo.class,"extender");
         extender.setPosition(1.0);

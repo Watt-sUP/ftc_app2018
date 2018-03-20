@@ -75,7 +75,7 @@ public class DriverControl extends LinearOpMode
         while (opModeIsActive())
         {
             /// gamepad1 functions
-
+         // WHEN DPAD DOWN / UP BUTTON IS PRESSED DURIN DRIVER CONTROLLED PERIOD SWITCH ROBOT FORWARD AND BACKWARD CONTROL
             if(gamepad1.dpad_down)
             {
                 if(forward == 1) runner.swapMotors();
