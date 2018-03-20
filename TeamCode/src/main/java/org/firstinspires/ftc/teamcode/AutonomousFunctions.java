@@ -243,7 +243,7 @@ public abstract class AutonomousFunctions extends LinearOpMode {
                     Keep_Orientation(0);
                     break;
                 }
-
+                //still looking for the drawer, just in case that robot gets stuck in this function
                 if( last_dist - dist >=7 )
                     nr ++;
                 double pw = power * dif * 0.16;
