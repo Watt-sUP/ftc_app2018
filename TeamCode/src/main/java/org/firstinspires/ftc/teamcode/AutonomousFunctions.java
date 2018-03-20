@@ -272,6 +272,7 @@ public abstract class AutonomousFunctions extends LinearOpMode {
             telemetry.update();
 
             double left = 0;
+            // checking to find the shortest way to travel to optimal pos , and determining the sense of the rotation(ccw/cw)
             if (Optimal_pos > heading) left = -heading + Optimal_pos;
             else left = -heading + 360 + Optimal_pos;
 
@@ -282,9 +283,9 @@ public abstract class AutonomousFunctions extends LinearOpMode {
             if( Math.min(left, right) <= okDegrees ) return;
 
             if (left < right)
-                rnr.setPower(left, left, 0.006);
+                rnr.setPower(left, left, 0.006);//proportional turning
             else
-                rnr.setPower(-right, -right, 0.006);
+                rnr.setPower(-right, -right, 0.006);//proportional turning
 
             if( !opModeIsActive() ) return;
         }
