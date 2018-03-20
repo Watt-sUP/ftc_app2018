@@ -202,7 +202,7 @@ public abstract class AutonomousFunctions extends LinearOpMode {
     {
         double power = 0.3;
         double heading = getPitch();
-        double deg1 = 3.0;
+        double deg1 = 2.5;
         double okDegrees = 1;
         //rnr.setPower(-power * forward, power * forward);
         double last_dist = dist_r.getDistance(DistanceUnit.CM);
@@ -324,7 +324,7 @@ public abstract class AutonomousFunctions extends LinearOpMode {
         if (nr == 2)
             rnr.distanceMove(25.5 * forward, 0.3, this);
         if (nr == 3)
-            rnr.distanceMove(40.5 * forward, 0.3, this);
+            rnr.distanceMove(44 * forward, 0.3, this);
         if( !opModeIsActive() ) return;
 
     }

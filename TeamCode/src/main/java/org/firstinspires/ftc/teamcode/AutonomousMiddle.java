@@ -49,7 +49,6 @@ public class AutonomousMiddle extends AutonomousFunctions {
 
 
         /// Grab cube
-
         state.setValue("grab cube");
         telemetry.update();
         grab_cube();
@@ -57,6 +56,8 @@ public class AutonomousMiddle extends AutonomousFunctions {
 
         /// Gets key drawer
         state.setValue("get key drawer");
+        int drawer = getKeyDrawer();
+        if(forward == 1)    drawer = 4 - drawer;
         telemetry.update();
 
         /// Score jewels
@@ -71,17 +72,16 @@ public class AutonomousMiddle extends AutonomousFunctions {
         getDown();
         if(!opModeIsActive())   return;
 
-
         /// Go in front of first drawer
         state.setValue("go to drawer");
         telemetry.update();
         go_to_drawer();
         if (!opModeIsActive()) return;
 
-        /// TODO: Go to needed drawer
-        state.setValue("go to needed drawer");
+        /// Go to needed drawer
+        state.setValue("pick drawer");
         telemetry.update();
-        pick_drawer(2);
+        pick_drawer(3);
 
         /// Rotate 90 degrees
         state.setValue("rotate");
