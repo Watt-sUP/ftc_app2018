@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -13,9 +14,14 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 public class RangeSensorTest extends AutonomousFunctions {
 
     @Override
+
     public void runOpMode()
     {
+        Servo extender;
+        extender=hardwareMap.get(Servo.class,"extender");
+        extender.setPosition(1.0);
         initialization ();
+
 
         waitForStart();
         runtime.reset();

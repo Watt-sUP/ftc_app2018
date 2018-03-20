@@ -359,7 +359,7 @@ public abstract class AutonomousFunctions extends LinearOpMode {
     protected double gyroGetIntegratedZ()
     {
         double angle = gyro.getIntegratedZValue();
-        double scale = 360 / 348;
+        double scale = 360 / 346;
         angle *= scale;
         return angle;
     }
