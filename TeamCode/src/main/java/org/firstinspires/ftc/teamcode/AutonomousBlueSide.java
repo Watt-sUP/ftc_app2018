@@ -59,7 +59,7 @@ public class AutonomousBlueSide extends AutonomousFunctions {
         /// Get back some cm to be sure that we not miss the drawer
         state.setValue("get back");
         telemetry.update();
-        rnr.distanceMove(forward * 5, 0.4, this);
+        rnr.distanceMove(forward * -5, 0.4, this);
         if(!opModeIsActive())   return;
 
         /// Go in front of first drawer

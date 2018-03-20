@@ -81,7 +81,7 @@ public class AutonomousMiddle extends AutonomousFunctions {
         /// Go to needed drawer
         state.setValue("pick drawer");
         telemetry.update();
-        pick_drawer(3);
+        pick_drawer(1);
 
         /// Rotate 90 degrees
         state.setValue("rotate");

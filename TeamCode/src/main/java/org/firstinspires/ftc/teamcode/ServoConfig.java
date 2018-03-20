@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.util.Range;
 import java.util.List;
 
 @TeleOp(name="Servo Config", group="Linear Opmode")
-//@Disabled
+@Disabled
 public class ServoConfig extends LinearOpMode {
 
     // Declare OpMode members.

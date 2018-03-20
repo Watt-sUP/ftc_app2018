@@ -162,6 +162,15 @@ public abstract class AutonomousFunctions extends LinearOpMode {
         else if(colorSensor.red() == colorSensor.blue())    clr = -1;
         else    clr = 1;
 
+        if(clr == -1)
+        {
+            rotor.setPosition(0.45);
+            if(colorSensor.red() > colorSensor.blue())  clr = 0;
+            else if(colorSensor.red() == colorSensor.blue())    clr = -1;
+            else    clr = 1;
+            sleep(200);
+        }
+
         telemetry.addData("Red", colorSensor.red());
         telemetry.addData("Blue", colorSensor.blue());
         telemetry.update();
@@ -332,7 +341,7 @@ public abstract class AutonomousFunctions extends LinearOpMode {
 
     protected void pick_drawer(int nr) {
         if (nr == 1)
-            rnr.distanceMove(10 * forward, 0.3, this);
+            rnr.distanceMove(7 * forward, 0.3, this);
         if (nr == 2)
             rnr.distanceMove(25.5 * forward, 0.3, this);
         if (nr == 3)

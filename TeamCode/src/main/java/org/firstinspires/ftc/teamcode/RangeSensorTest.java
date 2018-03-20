@@ -27,26 +27,27 @@ public class RangeSensorTest extends AutonomousFunctions {
         waitForStart();
         runtime.reset();
 
-        while(true)
+        /*while(true)
         {
             Keep_Orientation(90);
             break;
             //if(false)   break;
             //if(!opModeIsActive())   return;
         }
-        if(true)    return;
+        if(true)    return;*/
 
         Telemetry.Item df, dr, ds;
-        df = telemetry.addData("Range fata", "init");
-        dr = telemetry.addData("Range dreapta", "init");
-        ds = telemetry.addData("Range spate", "init");
+        df = telemetry.addData("Red", "init");
+        dr = telemetry.addData("Blue", "init");
+        ds = telemetry.addData("Green", "init");
         telemetry.update();
 
+        colorSensor.enableLed(true);
         while(true)
         {
-            df.setValue(dist_f.cmUltrasonic());
-            dr.setValue(dist_r.cmUltrasonic());
-            ds.setValue(dist_s.cmUltrasonic());
+            df.setValue(colorSensor.red());
+            dr.setValue(colorSensor.blue());
+            ds.setValue(colorSensor.green());
             telemetry.update();
             if(false)   break;
             if(!opModeIsActive())   return;
