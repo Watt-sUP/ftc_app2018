@@ -251,16 +251,16 @@ public abstract class AutonomousFunctions extends LinearOpMode {
 
         while (true)
         {
-            int heading = gyro.getHeading();
+            double heading = gyro.getHeading();
 
             gyroTelemetry.setValue(heading);
             telemetry.update();
 
-            int left = 0;
+            double left = 0;
             if (Optimal_pos > heading) left = -heading + Optimal_pos;
             else left = -heading + 360 + Optimal_pos;
 
-            int right = 0;
+            double right = 0;
             if (Optimal_pos > heading) right = -Optimal_pos + heading + 360;
             else right = -Optimal_pos + heading;
 
@@ -279,7 +279,7 @@ public abstract class AutonomousFunctions extends LinearOpMode {
     {
         double initPower = 0.2;
 
-        int orientation = gyro.getHeading();
+        double orientation = getGyroHeading();
         rnr.setPower(-1,1, initPower * forward);
 
 
@@ -302,7 +302,7 @@ public abstract class AutonomousFunctions extends LinearOpMode {
 
             rangeTelemetry.setValue( String.format("%.3f", dist));
             nrTelemetry.setValue(nr);
-            gyroTelemetry.setValue(gyro.getHeading());
+            gyroTelemetry.setValue(getGyroHeading());
             telemetry.update();
             sleep(200);
             if( !opModeIsActive() ) return;
@@ -354,5 +354,21 @@ public abstract class AutonomousFunctions extends LinearOpMode {
         if(!opModeIsActive())   return;
 
         if (!opModeIsActive()) return;
+    }
+
+    protected double gyroGetIntegratedZ()
+    {
+        double angle = gyro.getIntegratedZValue();
+        double scale = 360 / 348;
+        angle *= scale;
+        return angle;
+    }
+
+    protected double getGyroHeading()
+    {
+        double angle = gyroGetIntegratedZ();
+        while(angle < 0)    angle += 360;
+        while(angle >= 360)  angle -= 360;
+        return angle;
     }
 }
