@@ -62,7 +62,7 @@ public class AutonomousMiddle extends AutonomousFunctions {
         /// Score jewels
         state.setValue("score jewels");
         telemetry.update();
-        //scoreJewels();
+        scoreJewels(extender);
         if(!opModeIsActive())   return;
 
         /// Get down from platform
@@ -93,7 +93,7 @@ public class AutonomousMiddle extends AutonomousFunctions {
         /// Place cube
         state.setValue("place cube");
         telemetry.update();
-        place_cube();
+        place_cube_encoders();
         if( !opModeIsActive() ) return;
     }
 }

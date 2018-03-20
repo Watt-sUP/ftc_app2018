@@ -234,7 +234,7 @@ public abstract class AutonomousFunctions extends LinearOpMode {
 
                 if( last_dist - dist >=7 )
                     nr ++;
-                double pw = power * dif * 0.2;
+                double pw = power * dif * 0.16;
                 rnr.setPower(-pw, pw, forward);
             }
             last_dist = dist;
@@ -360,14 +360,15 @@ public abstract class AutonomousFunctions extends LinearOpMode {
 
     protected void place_cube_encoders()
     {
-        rnr.distanceMove(40, 0.25, this);
+        rnr.distanceMove(20, 0.25, this);
         collector.openArms(3);
         sleep(500);
         rnr.distanceMove(-20, 0.25, this);
         sleep(500);
-        collector.closeArms(1);
+        collector.closeArms(3);
         sleep(100);
-        rnr.distanceMove(30, 0.25, this);
+        rnr.distanceMove(20, 0.25, this);
+        sleep(100);
         rnr.distanceMove(-15, 0.25, this);
     }
 
