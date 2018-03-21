@@ -26,24 +26,23 @@ public class AutonomousBlueSide extends AutonomousFunctions {
 
         runtime.reset();
 
-
         /// Grab cube
         state.setValue("grab cube");
         telemetry.update();
         grab_cube();
         if (!opModeIsActive()) return;
 
-        /// Gets key drawer
-        state.setValue("get key drawer");
-        int drawer = getKeyDrawer();
-        if(forward == 1)    drawer = 4 - drawer;
-        telemetry.update();
-
         /// Score jewels
         state.setValue("score jewels");
         telemetry.update();
         scoreJewels(extender);
         if(!opModeIsActive())   return;
+
+        /// Gets key drawer
+        state.setValue("get key drawer");
+        int drawer = getKeyDrawer();
+        if(forward == 1)    drawer = 4 - drawer;
+        telemetry.update();
 
         /// Get down from platform
         state.setValue("get down from platform");

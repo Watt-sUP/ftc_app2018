@@ -428,6 +428,7 @@ public abstract class AutonomousFunctions extends LinearOpMode {
         collector.closeArms(3);
         sleep(100);
         rnr.distanceMove(15, 0.25, this);
+        collector.openArms(3);
         sleep(100);
         rnr.distanceMove(-15, 0.25, this);
     }
