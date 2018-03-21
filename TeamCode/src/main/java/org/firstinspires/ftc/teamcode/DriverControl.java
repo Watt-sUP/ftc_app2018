@@ -68,7 +68,7 @@ public class DriverControl extends LinearOpMode
         collector.setLiftMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         grabber.setPusherMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        int[] last = {0, 0, 0, 0};
+        int[] last = {0, 0, 0, 0, 0};
         boolean lb = false, rb = false, trg = false;
         int forward = 1;
 
@@ -89,9 +89,15 @@ public class DriverControl extends LinearOpMode
 
             double rnrY = -gamepad1.left_stick_y;
             double rnrX = gamepad1.right_stick_x;
-            if(gamepad1.left_bumper) runner.move(rnrY, rnrX, 0.25);
-            else if(gamepad1.right_bumper) runner.move(rnrY, rnrX, 0.5);
+            if(gamepad1.left_trigger >= 0.5) runner.move(rnrY, rnrX, 0.25);
+            else if(gamepad1.right_trigger >= 0.5) runner.move(rnrY, rnrX, 0.5);
             else runner.move(rnrY, rnrX);
+            if(gamepad1.y && last[4] == 0)
+            {
+                collector.closeArms(3);
+                last[4] = 1;
+            }
+            else if(!gamepad1.y)    last[4] = 0;
 
             /// gamepad2 functions
             if(gamepad2.a && last[0] == 0)

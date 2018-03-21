@@ -68,7 +68,7 @@ public class RelicGrabber
         pusher.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         monster.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         monster.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        //claw.setPosition(clawP[0]);
+        claw.setPosition(clawP[0]);
     }
 
     /**
