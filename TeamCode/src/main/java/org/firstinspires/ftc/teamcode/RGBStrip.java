@@ -16,7 +16,7 @@ public class RGBStrip
 {
     // Initialization of all objects
 
-    private DcMotor  red, green, blue;
+    private DcMotor red, green, blue;
     private Telemetry.Item telemetry;
     private boolean verbose = false;
     private ModernRoboticsUsbDcMotorController controller;
@@ -27,7 +27,7 @@ public class RGBStrip
      * @param _blue :  represents the Motor controller port where the RGB Strip cathode corresponding to blue is connected.
      * @param _green :  represents the Motor controller port where the RGB Strip cathode corresponding to green is connected.
      */
-    RGBStrip(DcMotor _plus, DcMotor _red, DcMotor _green, DcMotor _blue, Object... _telemetry)
+    RGBStrip(DcMotor _red, DcMotor _green, DcMotor _blue, Object... _telemetry)
     {
         red = _red; green = _green; blue = _blue;
         red.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -44,8 +44,6 @@ public class RGBStrip
     }
 
     //Turns off the RGB Strip
-
-
     public void off()
     {
         red.setPower(-0.01);
@@ -54,7 +52,6 @@ public class RGBStrip
     }
 
      //Set those parameters to the RGB values from the colors you need.
-
     public void setColor(int r, int g, int b)
     {
         if( (r == 0 && g == 0 && b == 0) || controller.getVoltage() < 11.0 )
@@ -77,7 +74,6 @@ public class RGBStrip
     }
 
     // Displays Telemetry
-
     public void logInformation()
     {
         telemetry.setValue( String.format("%.3f", red.getPower()) + " " +

@@ -19,6 +19,7 @@ public class DriverControl extends LinearOpMode
     private Runner runner;
     private CubeCollector collector;
     private RelicGrabber grabber;
+    private RGBStrip led;
 
     @Override
     public void runOpMode()
@@ -51,6 +52,12 @@ public class DriverControl extends LinearOpMode
                 hardwareMap.get(DcMotor.class, "monster"),
                 hardwareMap.get(Servo.class, "claw"),
                 hardwareMap.get(DcMotor.class, "pusher")
+        );
+
+        led = new RGBStrip(
+                hardwareMap.get(DcMotor.class, "red"),
+                hardwareMap.get(DcMotor.class, "green"),
+                hardwareMap.get(DcMotor.class, "blue")
         );
 
         Servo extender, rotor;
@@ -171,6 +178,21 @@ public class DriverControl extends LinearOpMode
             /*if(g2ry == 0)   grabber.movePusher(0.0);
             else if(g2ry > 0)   grabber.movePusher(g2ry * 0.1);
             else if(g2ry < 0)   grabber.movePusher(g2ry * 0.05);*/
+
+            /// RGB Strip
+            if(runtime.seconds() <= 90.0)
+            {
+                int sec = (int)runtime.seconds();
+                sec %= 30;
+                if(sec < 15)    led.setColor(255,153, 0);
+                else    led.setColor(0, 0, 255);
+            }
+            else if(runtime.seconds() < 109.0)
+                led.setColor(255, 0, 0);
+            else if(runtime.seconds() >= 109.5 && runtime.seconds() <= 110.5)
+                led.setColor(0, 255, 0);
+            else
+                led.setColor(255, 0, 0);
 
             /// Telemetry
             timeTelemetry.setValue(runtime.toString());
