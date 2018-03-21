@@ -148,13 +148,6 @@ public class Runner {
         else if(x > 0)
             setPower(-y, y - y * x, r);
     }
-    // CALL THIS METHOD TO SWITCH MOTORS
-    public void swapMotors()
-    {
-        DcMotor aux;
-        aux = leftF; leftF = rightB; rightB = aux;
-        aux = leftB; leftB = rightF; rightF = aux;
-    }
 
     /**
      * Moves robot according to gamepad axis Y(forward-backward), X(rotation) and no scale ratio
@@ -164,6 +157,31 @@ public class Runner {
     public void move(double y, double x)
     {
         move(y, x, 1.0);
+    }
+
+
+    /**
+     * Switch motors for changing the direction from gamepad
+     */
+    public void swapMotors()
+    {
+        DcMotor aux;
+        aux = leftF; leftF = rightB; rightB = aux;
+        aux = leftB; leftB = rightF; rightF = aux;
+    }
+
+    /**
+     * Maximum distance moved from the last reset
+     * @return distance
+     */
+    public double movedDistance()
+    {
+        double dist = 0.0;
+        dist = Math.max( dist, (double)( (double)leftF.getCurrentPosition() / ticksPerRevolution * wheelLength) );
+        dist = Math.max( dist, (double)( (double)leftB.getCurrentPosition() / ticksPerRevolution * wheelLength) );
+        dist = Math.max( dist, (double)( (double)rightF.getCurrentPosition() / ticksPerRevolution * wheelLength) );
+        dist = Math.max( dist, (double)( (double)rightB.getCurrentPosition() / ticksPerRevolution * wheelLength) );
+        return dist;
     }
 
     /**
