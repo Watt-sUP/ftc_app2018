@@ -44,7 +44,7 @@ public class CalibrateColorSensor extends OpMode {
     @Override
     public void init() {
         // Change the value "color" to the name of your color sensor.
-        color = hardwareMap.get(ModernRoboticsI2cColorSensor.class, "color");
+        color = hardwareMap.get(ModernRoboticsI2cColorSensor.class, "colors");
     }
 
     /**

@@ -42,6 +42,7 @@ public class AutonomousMiddle extends AutonomousFunctions {
         extender.setPosition(1.0);
         initialization ();
 
+        if(isStopRequested())   return;
 
         waitForStart();
 
@@ -52,7 +53,13 @@ public class AutonomousMiddle extends AutonomousFunctions {
         state.setValue("grab cube");
         telemetry.update();
         grab_cube();
-        if (!opModeIsActive()) return;
+        if (isStopRequested()) return;
+
+        /// Score jewels
+        state.setValue("score jewels");
+        telemetry.update();
+        scoreJewels(extender);
+        if(isStopRequested())   return;
 
         /// Gets key drawer
         state.setValue("get key drawer");
@@ -60,41 +67,35 @@ public class AutonomousMiddle extends AutonomousFunctions {
         if(forward == 1)    drawer = 4 - drawer;
         telemetry.update();
 
-        /// Score jewels
-        state.setValue("score jewels");
-        telemetry.update();
-        scoreJewels(extender);
-        if(!opModeIsActive())   return;
-
         /// Get down from platform
         state.setValue("get down from platform");
         telemetry.update();
         getDown();
         Keep_Orientation(0);
-        if(!opModeIsActive())   return;
+        if(isStopRequested())   return;
 
         /// Go in front of first drawer
         state.setValue("go to drawer");
         telemetry.update();
         go_to_drawer();
-        if (!opModeIsActive()) return;
+        if (isStopRequested()) return;
 
         /// Go to needed drawer
         state.setValue("pick drawer");
         telemetry.update();
-        pick_drawer(1);
+        pick_drawer(drawer);
 
         /// Rotate 90 degrees
         state.setValue("rotate");
         telemetry.update();
         Keep_Orientation(270);
-        if( !opModeIsActive() ) return;
+        if( isStopRequested() ) return;
 
 
         /// Place cube
         state.setValue("place cube");
         telemetry.update();
         place_cube_encoders(true);
-        if( !opModeIsActive() ) return;
+        if( isStopRequested() ) return;
     }
 }

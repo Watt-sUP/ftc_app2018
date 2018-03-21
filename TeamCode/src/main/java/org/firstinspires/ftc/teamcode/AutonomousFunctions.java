@@ -47,6 +47,8 @@ public abstract class AutonomousFunctions extends LinearOpMode {
     protected int nr=0;
     /// Vuforia
     protected VuforiaLocalizer vuforia;
+    protected VuforiaTrackables relicTrackables;
+    protected VuforiaTrackable relicTemplate;
 
     /// Compass + Accelerometer
     protected double fXg = 0;
@@ -54,7 +56,7 @@ public abstract class AutonomousFunctions extends LinearOpMode {
     protected double fZg = 0;
 
     /// Telemetry
-    protected Telemetry.Item gyroTelemetry, rangeTelemetry, nrTelemetry, compassTelemetry, odsTelemetry;
+    protected Telemetry.Item gyroTelemetry, rangeTelemetry, nrTelemetry, compassTelemetry, odsTelemetry, drw;
     protected Telemetry.Item lft, rgt, state;
 
     // initializes objects
@@ -116,6 +118,17 @@ public abstract class AutonomousFunctions extends LinearOpMode {
         Telemetry.Item colorTelemtry = telemetry.addData("Color", 0);
         colorSensor = hardwareMap.get(ModernRoboticsI2cColorSensor.class, "colors");
 
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+        parameters.vuforiaLicenseKey = "AT4pxIn/////AAAAGSL31MQ2OkEAlE8fAGFaXLprsCGiwn5e81ZDhALBFUMK45pVGTrKvkFV9ZBC8LGo2fubVHcyc2JBpk2bsXVf/0zESirRkEkFjIItegiTFBB6wwQeeBcANTIZAFH1EjAo6QDGxlMTyhJ6JJQmrm2yBPFJFpfWDus1E34IVIyLHc8V/iCSTuegaorAlk1MXV7r2jog5G5rwsWhfD6CDx2E85s1cD20eEC4XQqx2pgcbG0CB1ohiPIYG0jtj373VY8gn9PfX2YJDBe/sLAx4IbxQxvtpgL5PAhAFcTdPfYAi6GmUzLbWQDITzao3dFlxiJjRA8fklV5KsBKJFj6viP+m3HybrTgW6kR+VOFbU2J2wD8";
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
+        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
+        relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
+        relicTemplate = relicTrackables.get(0);
+        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
+        relicTrackables.activate();
+        drw = telemetry.addData("Key", "init");
+
         rnr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         collector.setLiftMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
@@ -130,18 +143,10 @@ public abstract class AutonomousFunctions extends LinearOpMode {
      * @return key drawer
      */
     protected int getKeyDrawer() {
-        if (true)
-            return 1;
-        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
-        parameters.vuforiaLicenseKey = "AT4pxIn/////AAAAGSL31MQ2OkEAlE8fAGFaXLprsCGiwn5e81ZDhALBFUMK45pVGTrKvkFV9ZBC8LGo2fubVHcyc2JBpk2bsXVf/0zESirRkEkFjIItegiTFBB6wwQeeBcANTIZAFH1EjAo6QDGxlMTyhJ6JJQmrm2yBPFJFpfWDus1E34IVIyLHc8V/iCSTuegaorAlk1MXV7r2jog5G5rwsWhfD6CDx2E85s1cD20eEC4XQqx2pgcbG0CB1ohiPIYG0jtj373VY8gn9PfX2YJDBe/sLAx4IbxQxvtpgL5PAhAFcTdPfYAi6GmUzLbWQDITzao3dFlxiJjRA8fklV5KsBKJFj6viP+m3HybrTgW6kR+VOFbU2J2wD8";
-        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
-        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
-        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
-        VuforiaTrackable relicTemplate = relicTrackables.get(0);
-        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
-        relicTrackables.activate();
         RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+
+        drw.setValue(vuMark.toString());
+        telemetry.update();
 
         if (vuMark == RelicRecoveryVuMark.LEFT) return 1;
         if (vuMark == RelicRecoveryVuMark.CENTER) return 2;
@@ -247,8 +252,8 @@ public abstract class AutonomousFunctions extends LinearOpMode {
                     break;
                 }
                 //still looking for the drawer, just in case that robot gets stuck in this function
-                if( last_dist - dist >=7 )
-                    nr ++;
+                //if( last_dist - dist >=7 )
+                //    nr ++;
                 double pw = power * dif * 0.16;
                 rnr.setPower(-pw, pw, forward);
             }

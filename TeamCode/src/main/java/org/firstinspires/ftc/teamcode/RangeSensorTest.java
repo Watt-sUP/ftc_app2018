@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -11,6 +12,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
  */
 
 @Autonomous(name="Range Test", group="Linear Opmode")
+@Disabled
 public class RangeSensorTest extends AutonomousFunctions {
 
     @Override
@@ -27,14 +29,21 @@ public class RangeSensorTest extends AutonomousFunctions {
         waitForStart();
         runtime.reset();
 
-        /*while(true)
+        while(true)
         {
-            Keep_Orientation(90);
-            break;
+            int drawer = getKeyDrawer();
+            //drw.setValue(drw);
+            //break;
             //if(false)   break;
             //if(!opModeIsActive())   return;
+            if(true)    break;
         }
-        if(true)    return;*/
+        while(true)
+        {
+            if(false)   break;
+            if(!opModeIsActive())   return;
+        }
+        if(true)    return;
 
         Telemetry.Item df, dr, ds;
         df = telemetry.addData("Red", "init");
