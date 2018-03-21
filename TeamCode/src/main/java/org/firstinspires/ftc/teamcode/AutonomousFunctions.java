@@ -78,6 +78,8 @@ public abstract class AutonomousFunctions extends LinearOpMode {
                 runnerTelemetry
         );
 
+        if(isStopRequested())   return;
+
         Telemetry.Item collectorTelemetry = telemetry.addData("Collector", 0);
         collector = new CubeCollector(
                 hardwareMap.get(Servo.class, "upleft"),
@@ -87,6 +89,9 @@ public abstract class AutonomousFunctions extends LinearOpMode {
                 hardwareMap.get(DcMotor.class, "lifter"),
                 collectorTelemetry
         );
+
+        if(isStopRequested())   return;
+
         //gyro calibration process
         gyroTelemetry = telemetry.addData("Gyro", "Not initialized");
         gyro = hardwareMap.get(ModernRoboticsI2cGyro.class, "gyro");
@@ -99,12 +104,14 @@ public abstract class AutonomousFunctions extends LinearOpMode {
         }
         gyroTelemetry.setValue("Calibrated!");
 
-        dist_f = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "distf");
+        if(isStopRequested())   return;
+
+        //dist_f = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "distf");
         dist_r = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "distr");
-        dist_s = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "dists");
-        dist_f.setI2cAddress(I2cAddr.create8bit(0x28));
+        //dist_s = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "dists");
+        //dist_f.setI2cAddress(I2cAddr.create8bit(0x28));
         dist_r.setI2cAddress(I2cAddr.create8bit(0x2a));
-        dist_s.setI2cAddress(I2cAddr.create8bit(0x2c));
+        //dist_s.setI2cAddress(I2cAddr.create8bit(0x2c));
 
         compass = hardwareMap.get(ModernRoboticsI2cCompassSensor.class, "compass");
         //compass.setMode(CompassSensor.CompassMode.CALIBRATION_MODE);
@@ -116,8 +123,12 @@ public abstract class AutonomousFunctions extends LinearOpMode {
         rotor = hardwareMap.get(Servo.class, "rotor");
         //extender.setPosition(1.0);
 
+        if(isStopRequested())   return;
+
         Telemetry.Item colorTelemtry = telemetry.addData("Color", 0);
         colorSensor = hardwareMap.get(ModernRoboticsI2cColorSensor.class, "colors");
+
+        if(isStopRequested())   return;
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
@@ -129,6 +140,8 @@ public abstract class AutonomousFunctions extends LinearOpMode {
         relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
         relicTrackables.activate();
         drw = telemetry.addData("Key", "init");
+
+        if(isStopRequested())   return;
 
         rnr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         collector.setLiftMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -234,7 +247,7 @@ public abstract class AutonomousFunctions extends LinearOpMode {
         double okDegrees = 1;
         //rnr.setPower(-power * forward, power * forward);
         double last_dist = dist_r.getDistance(DistanceUnit.CM);
-        double maxDist = 65.0;
+        double maxDist = 55.0;
         int step = 0;
 
         while( nr == 0 )
