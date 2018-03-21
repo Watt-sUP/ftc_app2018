@@ -177,10 +177,10 @@ public class Runner {
     public double movedDistance()
     {
         double dist = 0.0;
-        dist = Math.max( dist, (double)( (double)leftF.getCurrentPosition() / ticksPerRevolution * wheelLength) );
-        dist = Math.max( dist, (double)( (double)leftB.getCurrentPosition() / ticksPerRevolution * wheelLength) );
-        dist = Math.max( dist, (double)( (double)rightF.getCurrentPosition() / ticksPerRevolution * wheelLength) );
-        dist = Math.max( dist, (double)( (double)rightB.getCurrentPosition() / ticksPerRevolution * wheelLength) );
+        dist = Math.max( dist, Math.abs((double)( (double)leftF.getCurrentPosition() / ticksPerRevolution * wheelLength)) );
+        dist = Math.max( dist, Math.abs((double)( (double)leftB.getCurrentPosition() / ticksPerRevolution * wheelLength)) );
+        dist = Math.max( dist, Math.abs((double)( (double)rightF.getCurrentPosition() / ticksPerRevolution * wheelLength)) );
+        dist = Math.max( dist, Math.abs((double)( (double)rightB.getCurrentPosition() / ticksPerRevolution * wheelLength)) );
         return dist;
     }
 
