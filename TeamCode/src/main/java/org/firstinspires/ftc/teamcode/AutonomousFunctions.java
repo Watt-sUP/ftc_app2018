@@ -45,6 +45,7 @@ public abstract class AutonomousFunctions extends LinearOpMode {
     protected static int forward = 0;
     protected static int color = 0;    /// Red = 0, Blue = 1
     protected int nr=0;
+
     /// Vuforia
     protected VuforiaLocalizer vuforia;
     protected VuforiaTrackables relicTrackables;
@@ -145,14 +146,24 @@ public abstract class AutonomousFunctions extends LinearOpMode {
     protected int getKeyDrawer() {
         RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
 
+        int step = 0;
         drw.setValue(vuMark.toString());
         telemetry.update();
+        int drawer_number=0;
+        while (step < 10) {
+            if (vuMark == RelicRecoveryVuMark.LEFT) drawer_number = 1;
+            if (vuMark == RelicRecoveryVuMark.CENTER) drawer_number = 2;
+            if (vuMark == RelicRecoveryVuMark.RIGHT) drawer_number = 3;
+            if(drawer_number!=0)
+                break;
+            step++;
+        }
+        if(drawer_number==0)
+            drawer_number=2;
+        return drawer_number;
 
-        if (vuMark == RelicRecoveryVuMark.LEFT) return 1;
-        if (vuMark == RelicRecoveryVuMark.CENTER) return 2;
-        if (vuMark == RelicRecoveryVuMark.RIGHT) return 3;
-        return 2;
     }
+
     // CALL THIS METHOD FOR SCORING JEWELS
     protected void scoreJewels(Servo extender)
     {
