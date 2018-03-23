@@ -78,7 +78,8 @@ public class DriverControl extends LinearOpMode
         int[] last = {0, 0, 0, 0, 0};
         boolean lb = false, rb = false, trg = false;
         int forward = 1;
-
+        int ledon = 1;
+        boolean backpressed = false;
         while (opModeIsActive())
         {
             /// gamepad1 functions
@@ -174,25 +175,38 @@ public class DriverControl extends LinearOpMode
                 if(gamepad2.dpad_up)    grabber.powerMonster(g2ry * 0.5);
                 else    grabber.powerMonster(g2ry * 0.3);
             }
+            if(gamepad2.back)
+            {
+                if(!backpressed)
+                {
+                    ledon ^= 1;
+                    backpressed = true;
+                }
+            }
+            else
+                backpressed = false;
             //grabber.movePusher(g2ry * 0.25);
             /*if(g2ry == 0)   grabber.movePusher(0.0);
             else if(g2ry > 0)   grabber.movePusher(g2ry * 0.1);
             else if(g2ry < 0)   grabber.movePusher(g2ry * 0.05);*/
 
             /// RGB Strip
-            if(runtime.seconds() <= 90.0)
+            if(ledon > 0)
             {
-                int sec = (int)runtime.seconds();
-                sec %= 30;
-                if(sec < 15)    led.setColor(255,153, 0);
-                else    led.setColor(0, 0, 255);
+                if(runtime.seconds() <= 90.0)
+                {
+                    int sec = (int)runtime.seconds();
+                    sec %= 30;
+                    if(sec < 15)    led.setColor(255,153, 0);
+                    else    led.setColor(0, 0, 255);
+                }
+                else if(runtime.seconds() < 109.0)
+                    led.setColor(255, 0, 0);
+                else if(runtime.seconds() >= 109.5 && runtime.seconds() <= 110.5)
+                    led.setColor(0, 255, 0);
+                else
+                    led.setColor(255, 0, 0);
             }
-            else if(runtime.seconds() < 109.0)
-                led.setColor(255, 0, 0);
-            else if(runtime.seconds() >= 109.5 && runtime.seconds() <= 110.5)
-                led.setColor(0, 255, 0);
-            else
-                led.setColor(255, 0, 0);
 
             /// Telemetry
             timeTelemetry.setValue(runtime.toString());

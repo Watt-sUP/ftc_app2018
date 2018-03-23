@@ -40,7 +40,7 @@ public class CubeCollector
      */
     /// TODO: get better values, so we don't kill the servos
     private double[] openP = {0.6, 0.25, 0.15, 0.8};
-    private double[] closeP = {0.25, 0.55, 0.55, 0.45};
+    private double[] closeP = {0.2, 0.6, 0.6, 0.4};
     private double[] midP = {0.5, 0.5, 0.5, 0.5};
 
     /**
@@ -169,11 +169,13 @@ public class CubeCollector
     {
         if( (ids & 1) > 0 )
         {
+            stateUp = 0;
             upL.setPosition(openP[0]);
             upR.setPosition(openP[1]);
         }
         if( (ids & 2) > 0 )
         {
+            stateDown = 0;
             downL.setPosition(openP[2]);
             downR.setPosition(openP[3]);
         }
@@ -190,11 +192,13 @@ public class CubeCollector
     {
         if( (ids & 1) > 0 )
         {
+            stateUp = 1;
             upL.setPosition(closeP[0]);
             upR.setPosition(closeP[1]);
         }
         if( (ids & 2) > 0 )
         {
+            stateDown = 1;
             downL.setPosition(closeP[2]);
             downR.setPosition(closeP[3]);
         }

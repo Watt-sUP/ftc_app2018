@@ -30,6 +30,7 @@ public abstract class AutonomousFunctions extends LinearOpMode {
     /// Runner and Collector
     protected Runner rnr;
     protected CubeCollector collector;
+    protected RGBStrip led;
 
     /// Sensors
     protected ModernRoboticsI2cGyro gyro;
@@ -127,6 +128,12 @@ public abstract class AutonomousFunctions extends LinearOpMode {
 
         Telemetry.Item colorTelemtry = telemetry.addData("Color", 0);
         colorSensor = hardwareMap.get(ModernRoboticsI2cColorSensor.class, "colors");
+
+        led = new RGBStrip(
+                hardwareMap.get(DcMotor.class, "red"),
+                hardwareMap.get(DcMotor.class, "green"),
+                hardwareMap.get(DcMotor.class, "blue")
+        );
 
         if(isStopRequested())   return;
 

@@ -71,7 +71,7 @@ public class AutonomousBlueSide extends AutonomousFunctions {
         /// Go to needed drawer
         state.setValue("pick drawer");
         telemetry.update();
-        pick_drawer(2);
+        pick_drawer(drawer);
 
         /// Rotate 90 degrees
         state.setValue("rotate");

@@ -41,6 +41,7 @@ public class RGBStrip
         }
         else
             verbose = false;
+        off();
     }
 
     //Turns off the RGB Strip
