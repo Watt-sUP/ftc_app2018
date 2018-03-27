@@ -12,7 +12,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
  */
 
 @Autonomous(name="Range Test", group="Linear Opmode")
-@Disabled
+//@Disabled
 public class RangeSensorTest extends AutonomousFunctions {
 
     @Override
@@ -31,12 +31,14 @@ public class RangeSensorTest extends AutonomousFunctions {
 
         while(true)
         {
-            int drawer = getKeyDrawer();
+            double angle = getGyroHeading();
+            drw.setValue(angle);
+            telemetry.update();
             //drw.setValue(drw);
             //break;
             //if(false)   break;
             //if(!opModeIsActive())   return;
-            if(true)    break;
+            if(false)    break;
         }
         while(true)
         {

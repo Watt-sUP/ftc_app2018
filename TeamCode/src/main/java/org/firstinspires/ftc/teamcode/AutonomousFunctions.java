@@ -318,7 +318,11 @@ public abstract class AutonomousFunctions extends LinearOpMode {
             if (Optimal_pos > heading) right = -Optimal_pos + heading + 360;
             else right = -Optimal_pos + heading;
 
-            if( Math.min(left, right) <= okDegrees ) return;
+            if( Math.min(left, right) <= okDegrees )
+            {
+                rnr.setPower(0.0, 0.0);
+                return;
+            }
 
             if (left < right)
                 rnr.setPower(left, left, 0.006);//proportional turning
@@ -439,6 +443,34 @@ public abstract class AutonomousFunctions extends LinearOpMode {
         sleep(100);
         rnr.distanceMove(-15, 0.25, this);
     }
+
+    protected void place_cube_time()
+    {
+        sleep(1000);
+        rnr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rnr.setPower(-0.25, 0.25);
+        sleep(1250);
+        rnr.setPower(0.0, 0.0);
+        collector.openArms(3);
+        sleep(500);
+        rnr.setPower(0.25, -0.25);
+        sleep(750);
+        rnr.setPower(0.0, 0.0);
+
+        if(runtime.seconds() > 28.0)    return;
+
+        collector.closeArms(3);
+        sleep(100);
+        rnr.setPower(-0.25, 0.25);
+        sleep(1000);
+        rnr.setPower(0.0, 0.0);
+        collector.openArms(3);
+        sleep(200);
+        rnr.setPower(0.25, -0.25);
+        sleep(750);
+        rnr.setPower(0.0, 0.0);
+    }
+
     // THIS METHOD GETS THE REAL  INTEGRATED Z VALUE FROM THE GYRO SENSOR ( THE ONE RETURNED BY DEFAULT IS NOT CORRECT IN OUR CASE)
     protected double gyroGetIntegratedZ()
     {

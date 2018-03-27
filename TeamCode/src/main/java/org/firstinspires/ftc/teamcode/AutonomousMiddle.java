@@ -95,7 +95,8 @@ public class AutonomousMiddle extends AutonomousFunctions {
         /// Place cube
         state.setValue("place cube");
         telemetry.update();
-        place_cube_encoders(true);
+        //place_cube_encoders(true);
+        place_cube_time();
         if( isStopRequested() ) return;
     }
 }
